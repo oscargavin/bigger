@@ -10,6 +10,9 @@ export type User = {
   timezone?: string;
   notificationPreferences?: any;
   notification_preferences?: any;
+  startingWeight?: string | null;
+  starting_weight?: string | null;
+  height?: string | null;
   createdAt?: string;
   created_at?: string;
   updatedAt?: string;
@@ -64,6 +67,8 @@ export type NormalizeUser = {
   bio?: string | null;
   timezone?: string;
   notificationPreferences?: any;
+  startingWeight?: string | null;
+  height?: string | null;
   createdAt?: string;
   updatedAt?: string;
 };

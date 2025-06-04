@@ -61,6 +61,7 @@ export function AppSidebar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: user } = api.auth.getUser.useQuery();
+  const { data: pendingRequests } = api.pairings.getPendingRequests.useQuery();
   const signOut = api.auth.signOut.useMutation({
     onSuccess: () => {
       window.location.href = "/";
@@ -119,7 +120,12 @@ export function AppSidebar() {
                             : "text-muted-foreground/70 group-hover:text-muted-foreground"
                         )}
                       />
-                      <span>{item.label}</span>
+                      <span className="flex-1">{item.label}</span>
+                      {item.label === "Buddy" && pendingRequests && pendingRequests.length > 0 && (
+                        <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                          {pendingRequests.length}
+                        </span>
+                      )}
                     </span>
                   </Link>
                 ))}

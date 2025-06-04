@@ -112,40 +112,59 @@ export const pairingsRouter = createTRPCRouter({
   // Search for users to pair with
   searchUsers: protectedProcedure
     .input(z.object({
-      query: z.string().min(1),
+      query: z.string(),
     }))
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id
+      
+      // Trim and prepare search query
+      const searchQuery = input.query.trim()
 
-      // Search for users
-      const { data: users, error } = await ctx.supabase
+      // Build query
+      let query = ctx.supabase
         .from('users')
         .select('*')
-        .or(`username.ilike.%${input.query}%,full_name.ilike.%${input.query}%`)
         .neq('id', userId)
         .limit(10)
+      
+      // If search query provided, filter by it
+      if (searchQuery.length > 0) {
+        query = query.or(`username.ilike.%${searchQuery}%,full_name.ilike.%${searchQuery}%`)
+      }
+      
+      // Execute query
+      const { data: users, error } = await query
 
       if (error) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })
 
-      // Filter out users with existing pairings
-      const filteredUsers = []
-      for (const user of users) {
-        const { data: existingPairing } = await ctx.supabase
-          .from('pairings')
-          .select('id')
-          .or(
-            `and(user1_id.eq.${userId},user2_id.eq.${user.id}),` +
-            `and(user1_id.eq.${user.id},user2_id.eq.${userId})`
-          )
-          .in('status', ['active', 'pending'])
-          .single()
+      // If no users found, return empty array early
+      if (!users || users.length === 0) {
+        return []
+      }
 
-        if (!existingPairing) {
-          filteredUsers.push(user)
+      // Get all existing pairings for the current user in one query
+      const { data: userPairings } = await ctx.supabase
+        .from('pairings')
+        .select('user1_id, user2_id, status')
+        .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
+        .in('status', ['active', 'pending'])
+
+      // Create a set of user IDs that are already paired with the current user
+      const pairedUserIds = new Set<string>()
+      if (userPairings) {
+        for (const pairing of userPairings) {
+          if (pairing.user1_id === userId) {
+            pairedUserIds.add(pairing.user2_id)
+          } else {
+            pairedUserIds.add(pairing.user1_id)
+          }
         }
       }
 
-      return filteredUsers.map(user => ({
+      // Filter out users who are already paired
+      const availableUsers = users.filter(user => !pairedUserIds.has(user.id))
+
+      return availableUsers.map(user => ({
         id: user.id,
         username: user.username,
         fullName: user.full_name,

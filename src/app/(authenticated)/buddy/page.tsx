@@ -6,16 +6,26 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { Search, UserPlus, X, Check, Clock, Users } from 'lucide-react'
+import { Search, UserPlus, X, Check, Clock, Users, CheckCircle } from 'lucide-react'
 import type { User } from '@/types/api'
 import { HeadToHead } from '@/components/comparison/head-to-head'
 import { MessageList } from '@/components/messages/message-list'
 import { QuickMessage } from '@/components/messages/quick-message'
 import { MilestoneCelebrations } from '@/components/milestones/milestone-celebrations'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 
 export default function BuddyPage() {
   const [searchQuery, setSearchQuery] = useState('')
+  const [showEndDialog, setShowEndDialog] = useState(false)
   const utils = api.useUtils()
   const { data: user } = api.auth.getUser.useQuery()
 
@@ -28,9 +38,11 @@ export default function BuddyPage() {
   const { data: pendingRequests } = api.pairings.getPendingRequests.useQuery()
   const { data: sentRequests } = api.pairings.getSentRequests.useQuery()
   const { data: searchResults, isLoading: isSearching } = api.pairings.searchUsers.useQuery(
-    { query: searchQuery },
-    { enabled: searchQuery.length > 0 }
+    { query: searchQuery }
   )
+  
+  // Create a set of user IDs that have pending requests
+  const sentRequestUserIds = new Set(sentRequests?.map(req => req.to.id) || [])
 
   // Mutations
   const sendRequest = api.pairings.sendRequest.useMutation({
@@ -63,6 +75,7 @@ export default function BuddyPage() {
   const endPairing = api.pairings.endPairing.useMutation({
     onSuccess: () => {
       utils.pairings.getCurrentPairing.invalidate()
+      setShowEndDialog(false)
     },
   })
 
@@ -118,13 +131,37 @@ export default function BuddyPage() {
                 />
               </CardContent>
               <CardFooter className="pt-6 border-t border-border/50">
-                <Button
-                  variant="destructive"
-                  onClick={() => endPairing.mutate({ pairingId: currentPairing.id })}
-                  disabled={endPairing.isPending}
-                >
-                  End Partnership
-                </Button>
+                <Dialog open={showEndDialog} onOpenChange={setShowEndDialog}>
+                  <DialogTrigger asChild>
+                    <Button variant="destructive">
+                      End Partnership
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>End Partnership?</DialogTitle>
+                      <DialogDescription>
+                        Are you sure you want to end your partnership with {currentPairing.buddy.fullName}? 
+                        This action cannot be undone. You&apos;ll both need to find new gym buddies.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowEndDialog(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => endPairing.mutate({ pairingId: currentPairing.id })}
+                        disabled={endPairing.isPending}
+                      >
+                        {endPairing.isPending ? 'Ending...' : 'End Partnership'}
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </CardFooter>
             </Card>
 
@@ -162,15 +199,16 @@ export default function BuddyPage() {
 
       {/* Pending Requests */}
       {pendingRequests && pendingRequests.length > 0 && (
-        <Card className="border-border/50 bg-surface">
-          <CardHeader className="pb-6">
+        <Card className="border-emerald-500/20 bg-emerald-500/5 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-emerald-500/10 animate-pulse pointer-events-none" />
+          <CardHeader className="pb-6 relative">
             <div className="flex items-center gap-3">
-              <div className="rounded-full bg-emerald-500/10 p-2">
+              <div className="rounded-full bg-emerald-500/20 p-2 animate-pulse">
                 <Clock className="h-5 w-5 text-emerald-600" />
               </div>
               <div>
-                <CardTitle className="text-xl">Pending Requests</CardTitle>
-                <CardDescription>People who want to be your gym buddy</CardDescription>
+                <CardTitle className="text-xl">Pending Buddy Requests ({pendingRequests.length})</CardTitle>
+                <CardDescription className="text-base">Accept a request to start your accountability journey!</CardDescription>
               </div>
             </div>
           </CardHeader>
@@ -191,15 +229,17 @@ export default function BuddyPage() {
                 <div className="flex gap-2">
                   <Button
                     size="sm"
-                    variant="outline"
+                    variant="default"
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white"
                     onClick={() => acceptRequest.mutate({ requestId: request.id })}
                     disabled={acceptRequest.isPending}
                   >
-                    <Check className="h-4 w-4" />
+                    <Check className="h-4 w-4 mr-1" />
+                    Accept
                   </Button>
                   <Button
                     size="sm"
-                    variant="ghost"
+                    variant="outline"
                     onClick={() => rejectRequest.mutate({ requestId: request.id })}
                     disabled={rejectRequest.isPending}
                   >
@@ -263,25 +303,33 @@ export default function BuddyPage() {
         <CardContent className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="search" className="text-sm font-medium">Search by username or name</Label>
-            <div className="flex gap-2">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 id="search"
-                placeholder="Enter username or name..."
+                placeholder="Search users..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
-                className="h-11"
+                className="h-11 pl-10"
               />
-              <Button size="icon" variant="outline" disabled={!searchQuery || isSearching} className="h-11 w-11">
-                <Search className="h-4 w-4" />
-              </Button>
             </div>
+            <p className="text-xs text-muted-foreground">
+              {searchQuery ? 'Searching for users...' : 'Showing all available users'}
+            </p>
           </div>
 
           {/* Search Results */}
-          {searchResults && searchResults.length > 0 && (
+          {isSearching && (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">Searching...</p>
+            </div>
+          )}
+          
+          {!isSearching && searchResults && searchResults.length > 0 && (
             <div className="space-y-3">
-              <p className="text-sm font-medium text-muted-foreground">Search Results</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                {searchQuery ? 'Search Results' : 'Available Users'} ({searchResults.length})
+              </p>
               {searchResults.map((user) => (
                 <div key={user.id} className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/5 p-4 hover:bg-muted/10 transition-all duration-200">
                   <div className="flex items-center gap-4">
@@ -295,23 +343,38 @@ export default function BuddyPage() {
                       <p className="text-sm text-muted-foreground">@{user.username}</p>
                     </div>
                   </div>
-                  <Button
-                    size="sm"
-                    onClick={() => sendRequest.mutate({ toUserId: user.id })}
-                    disabled={sendRequest.isPending}
-                  >
-                    <UserPlus className="h-4 w-4 mr-1.5" />
-                    Request
-                  </Button>
+                  {sentRequestUserIds.has(user.id) ? (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      disabled
+                      className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/10"
+                    >
+                      <CheckCircle className="h-4 w-4 mr-1.5" />
+                      Requested
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      onClick={() => sendRequest.mutate({ toUserId: user.id })}
+                      disabled={sendRequest.isPending}
+                    >
+                      <UserPlus className="h-4 w-4 mr-1.5" />
+                      Request
+                    </Button>
+                  )}
                 </div>
               ))}
             </div>
           )}
 
-          {searchResults && searchResults.length === 0 && searchQuery && (
+          {!isSearching && searchResults && searchResults.length === 0 && (
             <div className="text-center py-8">
               <p className="text-muted-foreground">
-                No users found matching &ldquo;{searchQuery}&rdquo;
+                {searchQuery 
+                  ? `No users found matching "${searchQuery}"`
+                  : 'No available users to pair with'
+                }
               </p>
             </div>
           )}

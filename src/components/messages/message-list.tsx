@@ -20,7 +20,6 @@ export function MessageList({ pairingId, currentUserId }: MessageListProps) {
   const [newMessage, setNewMessage] = useState("");
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState("");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Subscribe to real-time message updates
   useMessageSubscription(pairingId);
@@ -62,23 +61,36 @@ export function MessageList({ pairingId, currentUserId }: MessageListProps) {
   });
 
   const messages = useMemo(() => 
-    messagesData?.pages.flatMap(page => page.messages) ?? [],
+    messagesData?.pages.flatMap(page => page.messages).reverse() ?? [],
     [messagesData]
   );
 
+  // Track which messages we've already marked as read to prevent duplicates
+  const markedAsReadRef = useRef<Set<string>>(new Set());
+
   // Mark messages as read when they come into view
   useEffect(() => {
-    messages.forEach(message => {
-      if (message.senderId !== currentUserId && !message.readAt) {
+    const unreadMessages = messages.filter(
+      message => message.senderId !== currentUserId && 
+      !message.readAt && 
+      !markedAsReadRef.current.has(message.id)
+    );
+    
+    if (unreadMessages.length > 0) {
+      unreadMessages.forEach(message => {
+        markedAsReadRef.current.add(message.id);
         markAsRead.mutate({ messageId: message.id });
-      }
-    });
-  }, [messages, currentUserId, markAsRead]);
+      });
+    }
+  }, [messages, currentUserId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Scroll to bottom when new messages arrive
+  // Scroll to top when new messages arrive (since newest are at top)
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = 0;
+    }
+  }, [messages.length]);
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -106,18 +118,33 @@ export function MessageList({ pairingId, currentUserId }: MessageListProps) {
   };
 
   return (
-    <Card className="flex flex-col h-[600px]">
-      <CardHeader className="pb-4">
-        <CardTitle>Messages</CardTitle>
+    <Card className="flex flex-col h-[600px] shadow-sm border-border/50">
+      <CardHeader className="border-b bg-surface/50 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg font-semibold">Messages</CardTitle>
+          {messages.length > 0 && (
+            <Badge variant="secondary" className="text-xs">
+              {messages.length} messages
+            </Badge>
+          )}
+        </div>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col p-0">
-        <div className="flex-1 overflow-y-auto px-4 pb-4">
+        <div 
+          ref={messagesContainerRef}
+          className="flex-1 overflow-y-auto px-6 py-4 scroll-smooth"
+        >
           {messages.length === 0 ? (
-            <div className="text-center text-muted-foreground py-8">
-              No messages yet. Start the conversation!
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="rounded-full bg-muted/50 p-4 mb-4">
+                <SendIcon className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <p className="text-muted-foreground text-sm">
+                No messages yet. Start the conversation!
+              </p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {messages.map((message) => {
                 const isOwnMessage = message.senderId === currentUserId;
                 const isEditing = editingMessageId === message.id;
@@ -126,16 +153,16 @@ export function MessageList({ pairingId, currentUserId }: MessageListProps) {
                   <div
                     key={message.id}
                     className={cn(
-                      "flex gap-3",
+                      "flex gap-3 animate-in fade-in-0 slide-in-from-bottom-2 duration-200",
                       isOwnMessage ? "justify-end" : "justify-start"
                     )}
                   >
                     <div
                       className={cn(
-                        "max-w-[70%] rounded-lg p-3",
+                        "group relative max-w-[70%] rounded-2xl px-4 py-3 transition-all",
                         isOwnMessage
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted"
+                          ? "bg-primary text-primary-foreground hover:shadow-md"
+                          : "bg-surface-raised hover:bg-muted/80"
                       )}
                     >
                       <div className="flex items-start gap-2">
@@ -145,19 +172,25 @@ export function MessageList({ pairingId, currentUserId }: MessageListProps) {
                           </span>
                         )}
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium text-sm">
+                          <div className="flex items-baseline gap-2 mb-1">
+                            <span className="font-semibold text-sm">
                               {message.sender.fullName || message.sender.username}
                             </span>
-                            <span className="text-xs opacity-70">
+                            <span className={cn(
+                              "text-xs",
+                              isOwnMessage ? "text-primary-foreground/70" : "text-muted-foreground"
+                            )}>
                               {message.createdAt ? formatDistanceToNow(new Date(message.createdAt), { 
                                 addSuffix: true 
                               }) : ''}
                             </span>
                             {message.editedAt && (
-                              <Badge variant="outline" className="text-xs">
-                                edited
-                              </Badge>
+                              <span className={cn(
+                                "text-xs italic",
+                                isOwnMessage ? "text-primary-foreground/70" : "text-muted-foreground"
+                              )}>
+                                (edited)
+                              </span>
                             )}
                           </div>
                           {isEditing ? (
@@ -190,13 +223,14 @@ export function MessageList({ pairingId, currentUserId }: MessageListProps) {
                               </Button>
                             </div>
                           ) : (
-                            <p className="text-sm">{message.content}</p>
+                            <p className="text-sm leading-relaxed break-words">{message.content}</p>
                           )}
                           {isOwnMessage && !message.deletedAt && (
-                            <div className="flex gap-2 mt-2">
+                            <div className="flex gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                               <Button
                                 size="sm"
                                 variant="ghost"
+                                className="h-7 px-2 hover:bg-white/10"
                                 onClick={() => {
                                   setEditingMessageId(message.id);
                                   setEditContent(message.content);
@@ -207,6 +241,7 @@ export function MessageList({ pairingId, currentUserId }: MessageListProps) {
                               <Button
                                 size="sm"
                                 variant="ghost"
+                                className="h-7 px-2 hover:bg-white/10"
                                 onClick={() => deleteMessage.mutate({ messageId: message.id })}
                               >
                                 <TrashIcon className="h-3 w-3" />
@@ -214,7 +249,10 @@ export function MessageList({ pairingId, currentUserId }: MessageListProps) {
                             </div>
                           )}
                           {message.readAt && isOwnMessage && (
-                            <CheckIcon className="h-3 w-3 mt-1 opacity-70" />
+                            <div className="absolute -bottom-5 right-0 flex items-center gap-1">
+                              <CheckIcon className="h-3 w-3 text-muted-foreground" />
+                              <span className="text-xs text-muted-foreground">Read</span>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -223,19 +261,20 @@ export function MessageList({ pairingId, currentUserId }: MessageListProps) {
                 );
               })}
               {hasNextPage && (
-                <Button
-                  variant="ghost"
-                  onClick={() => fetchNextPage()}
-                  className="w-full"
-                >
-                  Load more messages
-                </Button>
+                <div className="pt-2 pb-4">
+                  <Button
+                    variant="ghost"
+                    onClick={() => fetchNextPage()}
+                    className="w-full hover:bg-muted/50"
+                  >
+                    Load older messages
+                  </Button>
+                </div>
               )}
-              <div ref={messagesEndRef} />
             </div>
           )}
         </div>
-        <div className="border-t p-4">
+        <div className="border-t bg-surface/50 p-4">
           <div className="flex gap-2">
             <Input
               value={newMessage}
@@ -247,11 +286,13 @@ export function MessageList({ pairingId, currentUserId }: MessageListProps) {
                 }
               }}
               placeholder="Type a message..."
-              className="flex-1"
+              className="flex-1 h-11 bg-background border-border/50 focus:border-primary/50 transition-colors"
             />
             <Button
               onClick={handleSendMessage}
               disabled={!newMessage.trim() || sendMessage.isPending}
+              size="default"
+              className="h-11 px-4 shadow-sm"
             >
               <SendIcon className="h-4 w-4" />
             </Button>

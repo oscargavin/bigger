@@ -281,4 +281,47 @@ export const authRouter = createTRPCRouter({
 
       return data;
     }),
+
+  /**
+   * Update user profile in users table
+   */
+  updateUserProfile: protectedProcedure
+    .input(
+      z.object({
+        fullName: z.string().min(1).optional(),
+        bio: z.string().max(500).optional(),
+        avatarUrl: z.string().url().optional(),
+        timezone: z.string().optional(),
+        startingWeight: z.number().positive().optional(),
+        height: z.number().positive().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.user.id;
+
+      // Update users table
+      const { data, error } = await ctx.supabase
+        .from('users')
+        .update({
+          full_name: input.fullName,
+          bio: input.bio,
+          avatar_url: input.avatarUrl,
+          timezone: input.timezone,
+          starting_weight: input.startingWeight?.toString(),
+          height: input.height?.toString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', userId)
+        .select()
+        .single();
+
+      if (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error.message,
+        });
+      }
+
+      return data;
+    }),
 });

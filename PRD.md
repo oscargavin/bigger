@@ -84,6 +84,7 @@ _Smart shame and motivation_
 - [x] Personalized motivational messages using workout history
 - [x] AI-generated shame messages when streaks break
 - [x] Context-aware encouragement/roasting
+- [x] Edge case handling for users with no workout history
 
 **P4 - Smart Insights**
 

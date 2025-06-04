@@ -1,15 +1,146 @@
 'use client'
 
+import { useState, useRef, useEffect } from 'react'
+import Image from 'next/image'
 import { api } from '@/utils/api'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ReminderSettings } from '@/components/notifications/reminder-settings'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Camera, User, Activity, Globe, Save, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/hooks/use-toast'
+import { supabase } from '@/lib/supabase-client'
+
+const timezones = [
+  { value: 'UTC', label: 'UTC' },
+  { value: 'America/New_York', label: 'Eastern Time (ET)' },
+  { value: 'America/Chicago', label: 'Central Time (CT)' },
+  { value: 'America/Denver', label: 'Mountain Time (MT)' },
+  { value: 'America/Los_Angeles', label: 'Pacific Time (PT)' },
+  { value: 'Europe/London', label: 'London (GMT)' },
+  { value: 'Europe/Paris', label: 'Central European Time (CET)' },
+  { value: 'Asia/Tokyo', label: 'Japan Standard Time (JST)' },
+  { value: 'Australia/Sydney', label: 'Australian Eastern Time (AET)' },
+]
 
 export default function SettingsPage() {
   const router = useRouter()
-  const { data: user } = api.auth.getUser.useQuery()
+  const { toast } = useToast()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  
+  const { data: user, isLoading: userLoading } = api.auth.getUser.useQuery()
+  const utils = api.useUtils()
+  
+  const [isEditing, setIsEditing] = useState(false)
+  const [profileData, setProfileData] = useState({
+    fullName: '',
+    bio: '',
+    avatarUrl: '',
+    timezone: '',
+    startingWeight: '',
+    height: '',
+  })
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
+
+  // Initialize form data when user data is loaded
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        fullName: user.full_name || user.fullName || '',
+        bio: user.bio || '',
+        avatarUrl: user.avatar_url || user.avatarUrl || '',
+        timezone: user.timezone || 'UTC',
+        startingWeight: user.starting_weight || user.startingWeight || '',
+        height: user.height || '',
+      })
+    }
+  }, [user])
+
+  const updateProfileMutation = api.auth.updateUserProfile.useMutation({
+    onSuccess: () => {
+      toast({
+        title: 'Profile updated',
+        description: 'Your profile has been updated successfully.',
+      })
+      setIsEditing(false)
+      utils.auth.getUser.invalidate()
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update profile',
+        variant: 'destructive',
+      })
+    },
+  })
+
+  const handleSaveProfile = () => {
+    const updates: any = {}
+    if (profileData.fullName) updates.fullName = profileData.fullName
+    if (profileData.bio) updates.bio = profileData.bio
+    if (profileData.avatarUrl) updates.avatarUrl = profileData.avatarUrl
+    if (profileData.timezone) updates.timezone = profileData.timezone
+    if (profileData.startingWeight) updates.startingWeight = parseFloat(profileData.startingWeight)
+    if (profileData.height) updates.height = parseFloat(profileData.height)
+
+    updateProfileMutation.mutate(updates)
+  }
+
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file || !user) return
+
+    setUploadingAvatar(true)
+    
+    try {
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`
+      const filePath = `avatars/${fileName}`
+
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('user-uploads')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true,
+        })
+
+      if (uploadError) throw uploadError
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('user-uploads')
+        .getPublicUrl(filePath)
+
+      // Update local state
+      setProfileData(prev => ({ ...prev, avatarUrl: publicUrl }))
+
+      toast({
+        title: 'Avatar uploaded',
+        description: 'Your profile photo has been uploaded successfully.',
+      })
+    } catch (error) {
+      console.error('Avatar upload error:', error)
+      toast({
+        title: 'Upload failed',
+        description: 'Failed to upload profile photo. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setUploadingAvatar(false)
+    }
+  }
+
+  if (userLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -22,32 +153,200 @@ export default function SettingsPage() {
         >
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <div>
+        <div className="flex-1">
           <h1 className="text-4xl font-bold">Settings</h1>
-          <p className="text-muted-foreground">Manage your preferences</p>
+          <p className="text-muted-foreground">Manage your profile and preferences</p>
         </div>
+        {isEditing && (
+          <Button
+            onClick={handleSaveProfile}
+            disabled={updateProfileMutation.isPending}
+            className="gap-2"
+          >
+            {updateProfileMutation.isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4" />
+            )}
+            Save Changes
+          </Button>
+        )}
       </div>
 
-      {/* User Info */}
+      {/* Profile Information */}
       <Card className="border-border/50 bg-muted/30">
         <CardHeader>
-          <CardTitle className="text-xl">Account Information</CardTitle>
-          <CardDescription>Your profile details</CardDescription>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <User className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-xl">Profile Information</CardTitle>
+                <CardDescription>Your public profile details</CardDescription>
+              </div>
+            </div>
+            {!isEditing && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsEditing(true)}
+              >
+                Edit Profile
+              </Button>
+            )}
+          </div>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Username</span>
-            <span className="text-sm font-medium">{user?.username}</span>
+        <CardContent className="space-y-6">
+          {/* Avatar */}
+          <div className="flex items-center gap-6">
+            <div className="relative">
+              <div className="h-24 w-24 rounded-full bg-muted border-2 border-border overflow-hidden relative">
+                {profileData.avatarUrl ? (
+                  <Image
+                    src={profileData.avatarUrl}
+                    alt="Profile"
+                    fill
+                    className="object-cover"
+                    sizes="96px"
+                  />
+                ) : (
+                  <div className="h-full w-full flex items-center justify-center">
+                    <User className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                )}
+              </div>
+              {isEditing && (
+                <>
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="absolute bottom-0 right-0 h-8 w-8 rounded-full"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadingAvatar}
+                  >
+                    {uploadingAvatar ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Camera className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleAvatarUpload}
+                  />
+                </>
+              )}
+            </div>
+            <div className="flex-1 space-y-1">
+              <p className="text-sm text-muted-foreground">Username</p>
+              <p className="font-medium">@{user?.username}</p>
+            </div>
           </div>
-          <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Full Name</span>
-            <span className="text-sm font-medium">{user?.fullName}</span>
+
+          {/* Form Fields */}
+          <div className="grid gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Full Name</Label>
+              <Input
+                id="fullName"
+                value={profileData.fullName}
+                onChange={(e) => setProfileData(prev => ({ ...prev, fullName: e.target.value }))}
+                disabled={!isEditing}
+                placeholder="Enter your full name"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bio">Bio</Label>
+              <textarea
+                id="bio"
+                value={profileData.bio}
+                onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
+                disabled={!isEditing}
+                placeholder="Tell us about yourself..."
+                className="w-full min-h-[100px] px-3 py-2 text-sm rounded-md border border-input bg-background disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                maxLength={500}
+              />
+              <p className="text-xs text-muted-foreground text-right">
+                {profileData.bio.length}/500
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="timezone">Timezone</Label>
+              <Select
+                value={profileData.timezone}
+                onValueChange={(value) => setProfileData(prev => ({ ...prev, timezone: value }))}
+                disabled={!isEditing}
+              >
+                <SelectTrigger id="timezone">
+                  <SelectValue placeholder="Select timezone" />
+                </SelectTrigger>
+                <SelectContent>
+                  {timezones.map((tz) => (
+                    <SelectItem key={tz.value} value={tz.value}>
+                      {tz.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-          <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Member Since</span>
-            <span className="text-sm font-medium">
-              {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
-            </span>
+
+          {/* Account Info */}
+          <div className="pt-4 border-t border-border/50 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Member Since</span>
+              <span className="font-medium">
+                {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Physical Stats */}
+      <Card className="border-border/50 bg-muted/30">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-success/10">
+              <Activity className="h-5 w-5 text-success" />
+            </div>
+            <div>
+              <CardTitle className="text-xl">Physical Stats</CardTitle>
+              <CardDescription>Your baseline measurements</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="startingWeight">Starting Weight (lbs)</Label>
+            <Input
+              id="startingWeight"
+              type="number"
+              step="0.1"
+              value={profileData.startingWeight}
+              onChange={(e) => setProfileData(prev => ({ ...prev, startingWeight: e.target.value }))}
+              disabled={!isEditing}
+              placeholder="Enter weight"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="height">Height (inches)</Label>
+            <Input
+              id="height"
+              type="number"
+              step="0.1"
+              value={profileData.height}
+              onChange={(e) => setProfileData(prev => ({ ...prev, height: e.target.value }))}
+              disabled={!isEditing}
+              placeholder="Enter height"
+            />
           </div>
         </CardContent>
       </Card>
@@ -55,7 +354,30 @@ export default function SettingsPage() {
       {/* Notification Settings */}
       <ReminderSettings />
 
-      {/* More settings sections can be added here */}
+      {/* Cancel button when editing */}
+      {isEditing && (
+        <div className="flex justify-end">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setIsEditing(false)
+              // Reset form data
+              if (user) {
+                setProfileData({
+                  fullName: user.full_name || user.fullName || '',
+                  bio: user.bio || '',
+                  avatarUrl: user.avatar_url || user.avatarUrl || '',
+                  timezone: user.timezone || 'UTC',
+                  startingWeight: user.starting_weight || user.startingWeight || '',
+                  height: user.height || '',
+                })
+              }
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
