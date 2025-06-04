@@ -150,9 +150,9 @@ export function ProgressReport({ period = 'week', offset = 0 }: ProgressReportPr
 
           {/* Insights */}
           {report.insights.length > 0 && (
-            <Card className="card-glass border-2 border-border/50 shadow-soft-xl">
+            <Card className="border-border/50 bg-muted/30">
               <CardHeader>
-                <CardTitle className="text-lg">Key Insights</CardTitle>
+                <CardTitle className="text-xl">Key Insights</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {report.insights.map((insight, i) => (
@@ -174,11 +174,11 @@ export function ProgressReport({ period = 'week', offset = 0 }: ProgressReportPr
 
           {/* Weight Progress */}
           {report.weightProgress && (
-            <Card className="card-interactive border-2 border-border dark:border-border/50">
+            <Card className="border-border/50">
               <CardHeader>
                 <div className="flex items-center gap-2">
-                  <Weight className="h-5 w-5 text-brand-600 dark:text-brand-400" />
-                  <CardTitle className="text-lg">Weight Progress</CardTitle>
+                  <Weight className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  <CardTitle className="text-xl">Weight Progress</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -209,11 +209,11 @@ export function ProgressReport({ period = 'week', offset = 0 }: ProgressReportPr
 
           {/* Badges Earned */}
           {report.badgesEarned.length > 0 && (
-            <Card className="card-interactive border-2 border-border dark:border-border/50">
+            <Card className="border-border/50">
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Award className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                  <CardTitle className="text-lg">Achievements Unlocked</CardTitle>
+                  <CardTitle className="text-xl">Achievements Unlocked</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -236,17 +236,17 @@ export function ProgressReport({ period = 'week', offset = 0 }: ProgressReportPr
 
           {/* Top Exercises */}
           {report.topExercises.length > 0 && (
-            <Card className="card-interactive border-2 border-border dark:border-border/50">
+            <Card className="border-border/50">
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Dumbbell className="h-5 w-5 text-violet-600 dark:text-violet-400" />
-                  <CardTitle className="text-lg">Most Performed Exercises</CardTitle>
+                  <CardTitle className="text-xl">Most Performed Exercises</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {report.topExercises.map((exercise: any, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface-raised dark:bg-surface-base">
+                    <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
                       <div>
                         <p className="font-medium">{exercise.name}</p>
                         <p className="text-sm text-muted-foreground">
@@ -307,15 +307,24 @@ function MetricCard({ title, value, comparison, previousValue, subtitle, icon: I
   }
 
   return (
-    <Card className="card-elevated hover-lift overflow-hidden relative">
-      <div className={cn("absolute inset-0 bg-gradient-to-br", colorMap[color as keyof typeof colorMap])} />
-      <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
+    <Card className="border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <div className={cn("rounded-lg p-2 ring-1", iconColorMap[color as keyof typeof iconColorMap])}>
-          <Icon className="h-4 w-4" />
+        <div className={cn("h-8 w-8 rounded-lg flex items-center justify-center", 
+          color === 'blue' && 'bg-blue-500/10',
+          color === 'purple' && 'bg-violet-500/10',
+          color === 'emerald' && 'bg-emerald-500/10',
+          color === 'amber' && 'bg-amber-500/10'
+        )}>
+          <Icon className={cn("h-4 w-4",
+            color === 'blue' && 'text-blue-600 dark:text-blue-400',
+            color === 'purple' && 'text-violet-600 dark:text-violet-400',
+            color === 'emerald' && 'text-emerald-600 dark:text-emerald-400',
+            color === 'amber' && 'text-amber-600 dark:text-amber-400'
+          )} />
         </div>
       </CardHeader>
-      <CardContent className="relative">
+      <CardContent>
         <div className="text-2xl font-bold">{value}</div>
         {subtitle && (
           <p className="text-xs text-muted-foreground">{subtitle}</p>

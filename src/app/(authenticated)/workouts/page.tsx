@@ -135,92 +135,90 @@ export default function WorkoutsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-12">
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">Log Workout</h1>
-        <p className="text-muted-foreground">Track your progress and stay consistent</p>
+        <h1 className="text-4xl font-bold tracking-tight">Log Workout</h1>
+        <p className="text-lg text-muted-foreground mt-2">Track your progress and stay consistent</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card className="card-elevated hover-lift overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent dark:from-emerald-400/10" />
-          <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Current Streak</CardTitle>
-            <div className="rounded-lg bg-emerald-100 dark:bg-emerald-900/30 p-2 ring-1 ring-emerald-200 dark:ring-emerald-800">
-              <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card className="border-border/50 bg-surface hover:shadow-lg transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Current Streak</CardTitle>
+            <div className="rounded-full bg-emerald-500/10 p-2">
+              <CheckCircle className="h-5 w-5 text-emerald-600" />
             </div>
           </CardHeader>
-          <CardContent className="relative">
-            <div className="text-2xl font-bold bg-gradient-to-br from-emerald-600 to-emerald-500 dark:from-emerald-400 dark:to-emerald-300 bg-clip-text text-transparent">
-              {stats?.currentStreak || 0} days
+          <CardContent>
+            <div className="text-3xl font-bold">
+              {stats?.currentStreak || 0} <span className="text-lg font-normal text-muted-foreground">days</span>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground mt-1">
               Best: {stats?.longestStreak || 0} days
             </p>
           </CardContent>
         </Card>
 
-        <Card className="card-elevated hover-lift overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-500/10 to-transparent dark:from-brand-400/10" />
-          <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">This Week</CardTitle>
-            <div className="rounded-lg bg-brand-100 dark:bg-brand-900/30 p-2 ring-1 ring-brand-200 dark:ring-brand-800">
-              <Clock className="h-4 w-4 text-brand-600 dark:text-brand-400" />
+        <Card className="border-border/50 bg-surface hover:shadow-lg transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">This Week</CardTitle>
+            <div className="rounded-full bg-blue-500/10 p-2">
+              <Clock className="h-5 w-5 text-blue-600" />
             </div>
           </CardHeader>
-          <CardContent className="relative">
-            <div className="text-2xl font-bold bg-gradient-to-br from-brand-600 to-brand-500 dark:from-brand-400 dark:to-brand-300 bg-clip-text text-transparent">
-              {stats?.thisWeek || 0} workouts
+          <CardContent>
+            <div className="text-3xl font-bold">
+              {stats?.thisWeek || 0} <span className="text-lg font-normal text-muted-foreground">workouts</span>
             </div>
-            <p className="text-xs text-muted-foreground">Keep it up!</p>
+            <p className="text-sm text-muted-foreground mt-1">Keep it up!</p>
           </CardContent>
         </Card>
 
-        <Card className="card-elevated hover-lift overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-transparent dark:from-violet-400/10" />
-          <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Workouts</CardTitle>
-            <div className="rounded-lg bg-violet-100 dark:bg-violet-900/30 p-2 ring-1 ring-violet-200 dark:ring-violet-800">
-              <CheckCircle className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+        <Card className="border-border/50 bg-surface hover:shadow-lg transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Workouts</CardTitle>
+            <div className="rounded-full bg-violet-500/10 p-2">
+              <CheckCircle className="h-5 w-5 text-violet-600" />
             </div>
           </CardHeader>
-          <CardContent className="relative">
-            <div className="text-2xl font-bold bg-gradient-to-br from-violet-600 to-violet-500 dark:from-violet-400 dark:to-violet-300 bg-clip-text text-transparent">
+          <CardContent>
+            <div className="text-3xl font-bold">
               {stats?.totalWorkouts || 0}
             </div>
-            <p className="text-xs text-muted-foreground">All time</p>
+            <p className="text-sm text-muted-foreground mt-1">All time</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Log Workout Form */}
-      <Card className="card-interactive border-2 border-border dark:border-border/50">
+      <Card className="border-border/50 bg-surface shadow-sm">
         <form onSubmit={handleSubmit}>
-          <CardHeader>
-            <CardTitle>New Workout</CardTitle>
+          <CardHeader className="pb-6">
+            <CardTitle className="text-2xl">New Workout</CardTitle>
             <CardDescription>Log your workout to maintain your streak</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             {/* Photo Upload */}
             <div className="space-y-2">
-              <Label>Workout Photo (optional)</Label>
+              <Label className="text-sm font-medium">Workout Photo (optional)</Label>
               <div className="flex flex-col items-center gap-4">
                 {photoPreview ? (
                   <div className="relative w-full max-w-sm">
-                    <div className="relative w-full h-[300px]">
+                    <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden">
                       <Image
                         src={photoPreview}
                         alt="Workout preview"
                         fill
-                        className="rounded-lg object-cover"
+                        className="object-cover"
                       />
                     </div>
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute top-2 right-2 z-10"
+                      className="absolute top-2 right-2 z-10 bg-background/80 backdrop-blur-sm"
                       onClick={() => {
                         setPhotoFile(null)
                         setPhotoPreview(null)
@@ -234,10 +232,12 @@ export default function WorkoutsPage() {
                   </div>
                 ) : (
                   <div
-                    className="w-full max-w-sm h-48 border-2 border-dashed rounded-lg flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                    className="w-full max-w-sm h-48 border-2 border-dashed border-border/50 rounded-xl flex flex-col items-center justify-center gap-3 cursor-pointer hover:bg-muted/5 hover:border-border transition-all duration-200"
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <Camera className="h-8 w-8 text-muted-foreground" />
+                    <div className="rounded-full bg-primary/10 p-3">
+                      <Camera className="h-6 w-6 text-primary/70" />
+                    </div>
                     <p className="text-sm text-muted-foreground">Click to upload photo</p>
                   </div>
                 )}
@@ -253,7 +253,7 @@ export default function WorkoutsPage() {
 
             {/* Duration */}
             <div className="space-y-2">
-              <Label htmlFor="duration">Duration (minutes)</Label>
+              <Label htmlFor="duration" className="text-sm font-medium">Duration (minutes)</Label>
               <Input
                 id="duration"
                 type="number"
@@ -262,25 +262,28 @@ export default function WorkoutsPage() {
                 onChange={(e) => setDurationMinutes(e.target.value)}
                 min="1"
                 max="300"
+                className="h-11"
               />
             </div>
 
             {/* Notes */}
             <div className="space-y-2">
-              <Label htmlFor="notes">Notes (optional)</Label>
+              <Label htmlFor="notes" className="text-sm font-medium">Notes (optional)</Label>
               <Input
                 id="notes"
                 placeholder="Upper body day, felt strong!"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 maxLength={200}
+                className="h-11"
               />
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="pt-6">
             <Button 
               type="submit" 
-              className="w-full"
+              className="w-full h-12 text-base font-medium shadow-sm"
+              size="lg"
               disabled={isUploading || createWorkout.isPending}
             >
               {isUploading || createWorkout.isPending ? (
@@ -301,36 +304,43 @@ export default function WorkoutsPage() {
 
       {/* Recent Workouts */}
       {recentWorkouts && recentWorkouts.length > 0 && (
-        <Card className="card-glass border-2 border-border/50 shadow-soft-xl">
-          <CardHeader>
-            <CardTitle>Recent Workouts</CardTitle>
+        <Card className="border-border/50 bg-surface">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-2xl">Recent Workouts</CardTitle>
             <CardDescription>Your last few sessions</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-4">
             {recentWorkouts.map((workout) => (
-              <div key={workout.id} className="flex items-center justify-between rounded-lg border border-border/50 bg-surface-raised dark:bg-surface-base p-3 hover:bg-surface-overlay dark:hover:bg-surface-raised transition-colors">
-                <div className="flex items-center gap-3">
+              <div 
+                key={workout.id} 
+                className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/5 p-4 hover:bg-muted/10 transition-all duration-200"
+              >
+                <div className="flex items-center gap-4">
                   {workout.photos?.[0] ? (
-                    <div className="relative h-12 w-12">
+                    <div className="relative h-14 w-14">
                       <Image
                         src={workout.photos[0].photo_url}
                         alt="Workout"
                         fill
-                        className="rounded-lg object-cover ring-2 ring-border/50"
+                        className="rounded-lg object-cover"
                       />
                     </div>
                   ) : (
-                    <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-gray-200 to-gray-100 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center">
-                      <ImageIcon className="h-6 w-6 text-gray-500 dark:text-gray-400" />
+                    <div className="h-14 w-14 rounded-lg bg-muted/50 flex items-center justify-center">
+                      <ImageIcon className="h-6 w-6 text-muted-foreground/50" />
                     </div>
                   )}
                   <div>
-                    <p className="font-medium">
-                      {new Date(workout.completed_at).toLocaleDateString()}
+                    <p className="font-semibold">
+                      {new Date(workout.completed_at).toLocaleDateString('en-US', { 
+                        weekday: 'short', 
+                        month: 'short', 
+                        day: 'numeric' 
+                      })}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {workout.duration_minutes ? `${workout.duration_minutes} min` : 'No duration'} 
-                      {workout.notes && ` • ${workout.notes}`}
+                      {workout.notes && ` • ${workout.notes.substring(0, 30)}${workout.notes.length > 30 ? '...' : ''}`}
                     </p>
                   </div>
                 </div>

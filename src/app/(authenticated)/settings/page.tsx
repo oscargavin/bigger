@@ -23,15 +23,15 @@ export default function SettingsPage() {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold">Settings</h1>
+          <h1 className="text-4xl font-bold">Settings</h1>
           <p className="text-muted-foreground">Manage your preferences</p>
         </div>
       </div>
 
       {/* User Info */}
-      <Card className="card-glass border-2 border-border/50 shadow-soft-xl">
+      <Card className="border-border/50 bg-muted/30">
         <CardHeader>
-          <CardTitle className="text-lg">Account Information</CardTitle>
+          <CardTitle className="text-xl">Account Information</CardTitle>
           <CardDescription>Your profile details</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">

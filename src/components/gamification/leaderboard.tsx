@@ -113,7 +113,7 @@ export function Leaderboard({ className }: LeaderboardProps) {
             {/* User's Position if not in top */}
             {userStats && userStats.rank && userStats.rank > 20 && (
               <div className="pt-4 border-t">
-                <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 ring-2 ring-blue-500">
+                <div className="p-4 rounded-lg bg-primary/10 ring-2 ring-primary">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span className="text-lg font-bold">#{userStats.rank}</span>
@@ -125,7 +125,7 @@ export function Leaderboard({ className }: LeaderboardProps) {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
+                      <p className="text-xl font-bold text-primary">
                         {userStats?.[period === 'weekly' ? 'weeklyPoints' : period === 'monthly' ? 'monthlyPoints' : 'totalPoints']?.toLocaleString() || '0'}
                       </p>
                       <p className="text-xs text-muted-foreground">points</p>
@@ -162,11 +162,11 @@ function PodiumCard({ entry, rank, isCurrentUser }: PodiumCardProps) {
   const getRankColor = () => {
     switch (rank) {
       case 1:
-        return 'from-yellow-400 to-amber-500'
+        return 'bg-amber-500'
       case 2:
-        return 'from-gray-300 to-gray-400'
+        return 'bg-gray-400'
       case 3:
-        return 'from-orange-400 to-orange-500'
+        return 'bg-orange-500'
     }
   }
   
@@ -185,9 +185,9 @@ function PodiumCard({ entry, rank, isCurrentUser }: PodiumCardProps) {
       {/* Avatar */}
       <div className="relative inline-block">
         <div className={cn(
-          'h-20 w-20 rounded-full overflow-hidden ring-4 flex items-center justify-center text-white text-2xl font-bold bg-gradient-to-br',
+          'h-20 w-20 rounded-full overflow-hidden ring-4 flex items-center justify-center text-white text-2xl font-bold',
           getRankColor(),
-          rank === 1 && 'ring-yellow-400',
+          rank === 1 && 'ring-amber-400',
           rank === 2 && 'ring-gray-300',
           rank === 3 && 'ring-orange-400'
         )}>
@@ -198,7 +198,7 @@ function PodiumCard({ entry, rank, isCurrentUser }: PodiumCardProps) {
           )}
         </div>
         <div className={cn(
-          'absolute -bottom-2 -right-2 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold bg-gradient-to-br',
+          'absolute -bottom-2 -right-2 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold',
           getRankColor()
         )}>
           {rank}
@@ -213,8 +213,10 @@ function PodiumCard({ entry, rank, isCurrentUser }: PodiumCardProps) {
       
       <div className="pt-2">
         <p className={cn(
-          'text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent',
-          getRankColor()
+          'text-2xl font-bold',
+          rank === 1 && 'text-amber-600',
+          rank === 2 && 'text-gray-600',
+          rank === 3 && 'text-orange-600'
         )}>
           {entry.points.toLocaleString()}
         </p>
@@ -238,14 +240,14 @@ interface LeaderboardRowProps {
 function LeaderboardRow({ entry, isCurrentUser }: LeaderboardRowProps) {
   return (
     <div className={cn(
-      'flex items-center justify-between p-4 rounded-lg card-elevated transition-all hover:scale-[1.02]',
-      isCurrentUser && 'ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-950/20'
+      'flex items-center justify-between p-4 rounded-lg border border-border/50 transition-all hover:scale-[1.02]',
+      isCurrentUser && 'ring-2 ring-primary bg-primary/10'
     )}>
       <div className="flex items-center gap-4">
         <span className="text-lg font-bold text-muted-foreground w-12">
           #{entry.rank}
         </span>
-        <div className="h-10 w-10 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold">
+        <div className="h-10 w-10 rounded-full overflow-hidden bg-violet-500 flex items-center justify-center text-white font-semibold">
           {entry.avatarUrl ? (
             <Image src={entry.avatarUrl} alt={entry.fullName} className="w-full h-full object-cover" fill sizes="80px" />
           ) : (
@@ -267,7 +269,7 @@ function LeaderboardRow({ entry, isCurrentUser }: LeaderboardRowProps) {
           <p className="text-xl font-bold">{entry.points.toLocaleString()}</p>
           <p className="text-xs text-muted-foreground">points</p>
         </div>
-        <TrendingUp className="h-5 w-5 text-green-500" />
+        <TrendingUp className="h-5 w-5 text-emerald-500" />
       </div>
     </div>
   )

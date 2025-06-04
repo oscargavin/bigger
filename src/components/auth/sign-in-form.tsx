@@ -58,21 +58,25 @@ export function SignInForm() {
   }
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>{isSignUp ? 'Create an account' : 'Sign in'}</CardTitle>
-        <CardDescription>
+    <Card className="w-full border-border/50 shadow-sm">
+      <CardHeader className="space-y-1 pb-6">
+        <CardTitle className="text-2xl font-semibold">
+          {isSignUp ? 'Create an account' : 'Sign in to your account'}
+        </CardTitle>
+        <CardDescription className="text-base">
           {isSignUp 
-            ? 'Enter your details to create your account' 
-            : 'Enter your email and password to sign in'}
+            ? 'Start your fitness journey today' 
+            : 'Welcome back! Please enter your details'}
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5">
           {isSignUp && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username" className="text-sm font-medium">
+                  Username
+                </Label>
                 <Input
                   id="username"
                   type="text"
@@ -80,10 +84,13 @@ export function SignInForm() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
+                  className="h-11"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="fullName" className="text-sm font-medium">
+                  Full Name
+                </Label>
                 <Input
                   id="fullName"
                   type="text"
@@ -91,12 +98,15 @@ export function SignInForm() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
+                  className="h-11"
                 />
               </div>
             </>
           )}
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-sm font-medium">
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
@@ -104,41 +114,58 @@ export function SignInForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-sm font-medium">
+              Password
+            </Label>
             <Input
               id="password"
               type="password"
+              placeholder={isSignUp ? "Create a strong password" : "Enter your password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="h-11"
             />
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
+        <CardFooter className="flex flex-col space-y-4 pt-2">
           <Button 
             type="submit" 
-            className="w-full" 
+            className="w-full h-11 text-base font-medium" 
             disabled={loading || signUp.isPending}
           >
-            {loading || signUp.isPending ? 'Loading...' : (isSignUp ? 'Sign up' : 'Sign in')}
+            {loading || signUp.isPending ? 'Loading...' : (isSignUp ? 'Create account' : 'Sign in')}
           </Button>
-          <p className="text-sm text-center text-muted-foreground">
-            {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-            <button
-              type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-primary hover:underline"
-            >
-              {isSignUp ? 'Sign in' : 'Sign up'}
-            </button>
-          </p>
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                {isSignUp ? 'Already have an account?' : 'New to Gym Buddy?'}
+              </span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsSignUp(!isSignUp)}
+            className="text-sm text-primary hover:text-primary/90 font-medium transition-colors"
+          >
+            {isSignUp ? 'Sign in instead' : 'Create an account'}
+          </button>
+
           {(error || signUp.error) && (
-            <p className="text-sm text-center text-destructive">
-              {error || signUp.error?.message}
-            </p>
+            <div className="rounded-md bg-destructive/10 p-3">
+              <p className="text-sm text-destructive text-center">
+                {error || signUp.error?.message}
+              </p>
+            </div>
           )}
         </CardFooter>
       </form>

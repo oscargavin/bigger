@@ -40,7 +40,7 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
     return (
       <div className={cn('flex items-center gap-4', className)}>
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-lg bg-gradient-to-br from-yellow-400 to-orange-500">
+          <div className="p-2 rounded-lg bg-amber-500">
             <Zap className="h-4 w-4 text-white" />
           </div>
           <div>
@@ -54,11 +54,11 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
   }
   
   return (
-    <Card className={cn('card-interactive', className)}>
+    <Card className={cn('border-border/50 bg-surface', className)}>
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Your Progress</h3>
+          <h3 className="text-xl font-semibold">Your Progress</h3>
           {stats.rank && (
             <Badge variant="outline" className="gap-1">
               <Trophy className="h-3 w-3" />
@@ -71,11 +71,11 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 shadow-lg">
-                <Zap className="h-6 w-6 text-white" />
+              <div className="p-3 rounded-xl bg-amber-500/10">
+                <Zap className="h-6 w-6 text-amber-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
+                <p className="text-2xl font-bold">
                   {totalPoints.toLocaleString()}
                 </p>
                 <p className="text-sm text-muted-foreground">Total Points</p>
@@ -101,26 +101,26 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
         
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="card-elevated p-4">
+          <div className="p-4 rounded-lg border border-border/50 bg-muted/5">
             <div className="flex items-center gap-2 mb-2">
-              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/20">
-                <TrendingUp className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              <div className="p-2 rounded-lg bg-primary/10">
+                <TrendingUp className="h-4 w-4 text-primary" />
               </div>
               <p className="text-sm font-medium">This Week</p>
             </div>
-            <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
+            <p className="text-xl font-bold">
               {(stats.weeklyPoints || 0).toLocaleString()}
             </p>
           </div>
           
-          <div className="card-elevated p-4">
+          <div className="p-4 rounded-lg border border-border/50 bg-muted/5">
             <div className="flex items-center gap-2 mb-2">
-              <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/20">
-                <Flame className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+              <div className="p-2 rounded-lg bg-violet-500/10">
+                <Flame className="h-4 w-4 text-violet-600" />
               </div>
               <p className="text-sm font-medium">This Month</p>
             </div>
-            <p className="text-xl font-bold text-purple-600 dark:text-purple-400">
+            <p className="text-xl font-bold">
               {(stats.monthlyPoints || 0).toLocaleString()}
             </p>
           </div>
@@ -128,12 +128,12 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
         
         {/* Multiplier */}
         {consistencyMultiplier > 1 && (
-          <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900/20 dark:to-red-900/20">
+          <div className="flex items-center justify-between p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
             <div className="flex items-center gap-2">
-              <Flame className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+              <Flame className="h-5 w-5 text-amber-600" />
               <span className="text-sm font-medium">Consistency Bonus Active</span>
             </div>
-            <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
+            <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20">
               {consistencyMultiplier}x Points
             </Badge>
           </div>

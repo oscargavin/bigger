@@ -7,6 +7,10 @@ import { badgesRouter } from '@/server/api/routers/badges';
 import { reportsRouter } from '@/server/api/routers/reports';
 import { aiShameRouter } from '@/server/api/routers/ai-shame';
 import { gamificationRouter } from '@/server/api/routers/gamification';
+import { insightsRouter } from '@/server/api/routers/insights';
+import { messagesRouter } from '@/server/api/routers/messages';
+import { goalsRouter } from '@/server/api/routers/goals';
+import { milestonesRouter } from '@/server/api/routers/milestones';
 
 /**
  * This is the primary router for your server.
@@ -22,6 +26,10 @@ export const appRouter = createTRPCRouter({
   reports: reportsRouter,
   aiShame: aiShameRouter,
   gamification: gamificationRouter,
+  insights: insightsRouter,
+  messages: messagesRouter,
+  goals: goalsRouter,
+  milestones: milestonesRouter,
   // Add more routers here as you create them
 });
 

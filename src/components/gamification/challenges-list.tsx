@@ -106,13 +106,13 @@ function ChallengeCard({ challenge, onJoin, isJoining }: ChallengeCardProps) {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'strength':
-        return 'from-red-500 to-orange-500'
+        return 'bg-red-500/10'
       case 'consistency':
-        return 'from-blue-500 to-cyan-500'
+        return 'bg-blue-500/10'
       case 'endurance':
-        return 'from-green-500 to-emerald-500'
+        return 'bg-emerald-500/10'
       default:
-        return 'from-purple-500 to-pink-500'
+        return 'bg-violet-500/10'
     }
   }
   
@@ -133,16 +133,16 @@ function ChallengeCard({ challenge, onJoin, isJoining }: ChallengeCardProps) {
   const isCompleted = challenge.userProgress?.completed
   
   return (
-    <Card className="card-interactive overflow-hidden">
+    <Card className="border-border/50 bg-surface hover:shadow-md transition-shadow">
       <div className="p-6 space-y-4">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className={cn(
-              'p-3 rounded-xl shadow-lg bg-gradient-to-br',
+              'p-3 rounded-xl',
               getCategoryColor(challenge.category)
             )}>
-              <span className="text-2xl text-white">{challenge.icon}</span>
+              <span className="text-2xl">{challenge.icon}</span>
             </div>
             <div>
               <h3 className="text-lg font-semibold flex items-center gap-2">
@@ -209,7 +209,7 @@ function ChallengeCard({ challenge, onJoin, isJoining }: ChallengeCardProps) {
           <Button 
             onClick={onJoin}
             disabled={isJoining}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+            className="w-full"
           >
             <Plus className="h-4 w-4 mr-2" />
             Join Challenge

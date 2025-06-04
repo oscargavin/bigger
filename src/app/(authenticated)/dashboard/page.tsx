@@ -12,6 +12,7 @@ import { BadgeDisplay } from '@/components/badges/badge-display'
 import { QuickStats } from '@/components/reports/quick-stats'
 import { ShameMessage } from '@/components/ai-shame/shame-message'
 import { PerformanceComparison } from '@/components/ai-shame/performance-comparison'
+import { GoalProgressWidget } from '@/components/goals/goal-progress-widget'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -26,150 +27,166 @@ export default function DashboardPage() {
   const reminderEnabled = user?.notificationPreferences?.dailyReminder?.enabled
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-12">
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">Welcome back{user?.fullName ? `, ${user.fullName}` : ''}!</h1>
-        <p className="text-muted-foreground">Track your progress and stay accountable</p>
+        <h1 className="text-4xl font-bold tracking-tight">
+          Welcome back{user?.fullName ? `, ${user.fullName.split(' ')[0]}` : ''}!
+        </h1>
+        <p className="text-lg text-muted-foreground mt-2">Track your progress and stay accountable</p>
         {reminderEnabled && (
-          <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs">
-            <Bell className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
-            <span className="text-emerald-700 dark:text-emerald-300">Daily reminders enabled</span>
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-4 py-2 text-sm font-medium">
+            <Bell className="h-4 w-4 text-emerald-600" />
+            <span className="text-emerald-700 dark:text-emerald-400">Daily reminders enabled</span>
           </div>
         )}
       </div>
 
       {/* AI Shame Engine Message */}
-      <ShameMessage className="mb-6" autoRefresh />
+      <ShameMessage className="mb-8" autoRefresh />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="card-elevated hover-lift overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent dark:from-emerald-400/10" />
-          <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Current Streak</CardTitle>
-            <div className="rounded-lg bg-emerald-100 dark:bg-emerald-900/30 p-2 ring-1 ring-emerald-200 dark:ring-emerald-800">
-              <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+      {/* Stats Grid */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="border-border/50 bg-surface hover:shadow-lg transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Current Streak</CardTitle>
+            <div className="rounded-full bg-emerald-500/10 p-2">
+              <TrendingUp className="h-5 w-5 text-emerald-600" />
             </div>
           </CardHeader>
-          <CardContent className="relative">
-            <div className="text-2xl font-bold bg-gradient-to-br from-emerald-600 to-emerald-500 dark:from-emerald-400 dark:to-emerald-300 bg-clip-text text-transparent">
-              {stats?.currentStreak || 0} days
+          <CardContent>
+            <div className="text-3xl font-bold">
+              {stats?.currentStreak || 0} <span className="text-lg font-normal text-muted-foreground">days</span>
             </div>
-            <p className="text-xs text-muted-foreground">Best: {stats?.longestStreak || 0} days</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Best: {stats?.longestStreak || 0} days
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="card-elevated hover-lift overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-500/10 to-transparent dark:from-brand-400/10" />
-          <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">This Week</CardTitle>
-            <div className="rounded-lg bg-brand-100 dark:bg-brand-900/30 p-2 ring-1 ring-brand-200 dark:ring-brand-800">
-              <Calendar className="h-4 w-4 text-brand-600 dark:text-brand-400" />
+        <Card className="border-border/50 bg-surface hover:shadow-lg transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">This Week</CardTitle>
+            <div className="rounded-full bg-blue-500/10 p-2">
+              <Calendar className="h-5 w-5 text-blue-600" />
             </div>
           </CardHeader>
-          <CardContent className="relative">
-            <div className="text-2xl font-bold bg-gradient-to-br from-brand-600 to-brand-500 dark:from-brand-400 dark:to-brand-300 bg-clip-text text-transparent">
-              {stats?.thisWeek || 0} workouts
+          <CardContent>
+            <div className="text-3xl font-bold">
+              {stats?.thisWeek || 0} <span className="text-lg font-normal text-muted-foreground">workouts</span>
             </div>
-            <p className="text-xs text-muted-foreground">Target: 5 workouts</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Target: 5 workouts
+            </p>
           </CardContent>
         </Card>
 
         <Card 
-          className="card-elevated hover-lift overflow-hidden relative cursor-pointer"
+          className="border-border/50 bg-surface hover:shadow-lg transition-all duration-200 cursor-pointer"
           onClick={() => router.push('/badges')}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent dark:from-amber-400/10" />
-          <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Achievements</CardTitle>
-            <div className="rounded-lg bg-amber-100 dark:bg-amber-900/30 p-2 ring-1 ring-amber-200 dark:ring-amber-800">
-              <Award className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Achievements</CardTitle>
+            <div className="rounded-full bg-amber-500/10 p-2">
+              <Award className="h-5 w-5 text-amber-600" />
             </div>
           </CardHeader>
-          <CardContent className="relative">
-            <div className="text-2xl font-bold bg-gradient-to-br from-amber-600 to-amber-500 dark:from-amber-400 dark:to-amber-300 bg-clip-text text-transparent">
-              {userBadges?.length || 0} earned
+          <CardContent>
+            <div className="text-3xl font-bold">
+              {userBadges?.length || 0} <span className="text-lg font-normal text-muted-foreground">earned</span>
             </div>
-            <p className="text-xs text-muted-foreground">Unlock achievements</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Unlock achievements
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="card-elevated hover-lift overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-transparent dark:from-violet-400/10" />
-          <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Gym Buddy</CardTitle>
-            <div className="rounded-lg bg-violet-100 dark:bg-violet-900/30 p-2 ring-1 ring-violet-200 dark:ring-violet-800">
-              <Users className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+        <Card className="border-border/50 bg-surface hover:shadow-lg transition-all duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Gym Buddy</CardTitle>
+            <div className="rounded-full bg-violet-500/10 p-2">
+              <Users className="h-5 w-5 text-violet-600" />
             </div>
           </CardHeader>
-          <CardContent className="relative">
-            <div className="text-2xl font-bold bg-gradient-to-br from-violet-600 to-violet-500 dark:from-violet-400 dark:to-violet-300 bg-clip-text text-transparent">
+          <CardContent>
+            <div className="text-2xl font-bold">
               {currentPairing ? currentPairing.buddy.username : 'Not paired'}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground mt-1">
               {currentPairing ? 'Stay accountable' : 'Find a partner'}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="card-interactive border-2 border-border dark:border-border/50">
-          <CardHeader>
-            <CardTitle className="text-lg">Quick Actions</CardTitle>
+      {/* Actions and Activity Grid */}
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Quick Actions */}
+        <Card className="border-border/50 bg-surface">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-2xl">Quick Actions</CardTitle>
             <CardDescription>Start your workout journey</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-4">
             <Button 
-              className="w-full bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 dark:from-brand-500 dark:to-brand-400 dark:hover:from-brand-600 dark:hover:to-brand-500 text-white shadow-soft hover:shadow-soft-md transition-all duration-200" 
+              className="w-full h-12 text-base font-medium shadow-sm" 
               size="lg"
               onClick={() => router.push('/workouts')}
             >
-              Log Workout
+              Log Today&apos;s Workout
             </Button>
             <Button 
-              className="w-full border-2 hover:bg-accent/10 dark:hover:bg-accent/20" 
+              className="w-full h-12 text-base font-medium" 
               variant="outline" 
               size="lg"
               onClick={() => router.push('/buddy')}
               disabled={!!currentPairing}
             >
-              {currentPairing ? 'View Buddy' : 'Find Gym Buddy'}
+              {currentPairing ? 'View Buddy Profile' : 'Find Gym Buddy'}
             </Button>
           </CardContent>
         </Card>
 
-        <Card className="card-interactive border-2 border-border dark:border-border/50">
-          <CardHeader>
-            <CardTitle className="text-lg">Recent Activity</CardTitle>
+        {/* Recent Activity */}
+        <Card className="border-border/50 bg-surface">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-2xl">Recent Activity</CardTitle>
             <CardDescription>Your workout history</CardDescription>
           </CardHeader>
           <CardContent>
             {recentWorkouts && recentWorkouts.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {recentWorkouts.map((workout) => (
-                  <div key={workout.id} className="flex items-center justify-between rounded-lg border border-border/50 bg-surface-raised dark:bg-surface-base p-3 hover:bg-surface-overlay dark:hover:bg-surface-raised transition-colors">
-                    <div className="flex items-center gap-3">
+                  <div 
+                    key={workout.id} 
+                    className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/5 p-4 hover:bg-muted/10 transition-all duration-200"
+                  >
+                    <div className="flex items-center gap-4">
                       {workout.photos?.[0] ? (
-                        <div className="relative h-10 w-10">
+                        <div className="relative h-14 w-14">
                           <Image
                             src={workout.photos[0].photo_url}
                             alt="Workout"
                             fill
-                            className="rounded-lg object-cover ring-2 ring-border/50"
+                            className="rounded-lg object-cover"
                           />
                         </div>
                       ) : (
-                        <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-gray-200 to-gray-100 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center">
-                          <ImageIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                        <div className="h-14 w-14 rounded-lg bg-muted/50 flex items-center justify-center">
+                          <ImageIcon className="h-6 w-6 text-muted-foreground/50" />
                         </div>
                       )}
                       <div>
-                        <p className="text-sm font-medium">
-                          {new Date(workout.completed_at).toLocaleDateString()}
+                        <p className="font-semibold">
+                          {new Date(workout.completed_at).toLocaleDateString('en-US', { 
+                            weekday: 'short', 
+                            month: 'short', 
+                            day: 'numeric' 
+                          })}
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-sm text-muted-foreground">
                           {workout.duration_minutes ? `${workout.duration_minutes} min` : 'No duration'} 
-                          {workout.notes && ` • ${workout.notes}`}
+                          {workout.notes && ` • ${workout.notes.substring(0, 30)}${workout.notes.length > 30 ? '...' : ''}`}
                         </p>
                       </div>
                     </div>
@@ -177,28 +194,36 @@ export default function DashboardPage() {
                       workoutId={workout.id}
                       durationMinutes={workout.duration_minutes}
                       notes={workout.notes}
-                      onUpdate={() => {
-                        utils.workouts.getMyWorkouts.invalidate()
-                        utils.workouts.getStats.invalidate()
+                      onUpdate={async () => {
+                        await Promise.all([
+                          utils.workouts.getMyWorkouts.invalidate(),
+                          utils.workouts.getStats.invalidate(),
+                          utils.badges.getUserBadges.invalidate(),
+                          utils.badges.getRecentBadges.invalidate()
+                        ])
                       }}
-                      onDelete={() => {
-                        utils.workouts.getMyWorkouts.invalidate()
-                        utils.workouts.getStats.invalidate()
+                      onDelete={async () => {
+                        await Promise.all([
+                          utils.workouts.getMyWorkouts.invalidate(),
+                          utils.workouts.getStats.invalidate(),
+                          utils.badges.getUserBadges.invalidate(),
+                          utils.badges.getRecentBadges.invalidate()
+                        ])
                       }}
                     />
                   </div>
                 ))}
                 <Button
                   variant="ghost"
-                  className="w-full"
+                  className="w-full mt-2"
                   onClick={() => router.push('/workouts')}
                 >
                   View all workouts →
                 </Button>
               </div>
             ) : (
-              <div className="flex items-center justify-center py-8 rounded-lg bg-background-subtle dark:bg-surface-base">
-                <p className="text-sm text-muted-foreground">No recent workouts</p>
+              <div className="flex items-center justify-center py-16 rounded-xl bg-muted/5">
+                <p className="text-muted-foreground">No recent workouts</p>
               </div>
             )}
           </CardContent>
@@ -207,17 +232,17 @@ export default function DashboardPage() {
 
       {/* Performance Comparison - Only show if user has a buddy */}
       {currentPairing && (
-        <div className="mb-6">
+        <div className="mb-8">
           <PerformanceComparison />
         </div>
       )}
 
       {/* Streak Calendar and Progress Summary */}
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-8 lg:grid-cols-3">
         {stats && (
-          <Card className="card-glass border-2 border-border/50 shadow-soft-xl lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="text-xl">Workout Calendar</CardTitle>
+          <Card className="border-border/50 bg-surface lg:col-span-2">
+            <CardHeader className="pb-6">
+              <CardTitle className="text-2xl">Workout Calendar</CardTitle>
               <CardDescription>Track your consistency over time</CardDescription>
             </CardHeader>
             <CardContent>
@@ -230,7 +255,10 @@ export default function DashboardPage() {
           </Card>
         )}
         
-        <QuickStats />
+        <div className="space-y-8">
+          <QuickStats />
+          <GoalProgressWidget />
+        </div>
       </div>
     </div>
   )

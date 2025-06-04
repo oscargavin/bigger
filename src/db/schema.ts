@@ -128,6 +128,9 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   challengeParticipations: many(challengeParticipants),
   seasonalCompetitionParticipations: many(seasonalCompetitionParticipants),
   comebackMechanics: many(comebackMechanics),
+  messages: many(messages),
+  goals: many(goals),
+  milestones: many(milestones),
 }))
 
 export const pairingsRelations = relations(pairings, ({ one, many }) => ({
@@ -143,6 +146,9 @@ export const pairingsRelations = relations(pairings, ({ one, many }) => ({
   }),
   workouts: many(workouts),
   competitions: many(competitions),
+  messages: many(messages),
+  goals: many(goals),
+  milestones: many(milestones),
 }))
 
 export const workoutsRelations = relations(workouts, ({ one, many }) => ({
@@ -496,6 +502,128 @@ export const comebackMechanicsRelations = relations(comebackMechanics, ({ one })
   }),
 }))
 
+// Social Features (Phase 7)
+
+// Messages table for buddy communication
+export const messages = pgTable('messages', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  pairingId: uuid('pairing_id').notNull().references(() => pairings.id, { onDelete: 'cascade' }),
+  senderId: uuid('sender_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  content: text('content').notNull(),
+  messageType: text('message_type', { enum: ['text', 'celebration', 'encouragement', 'challenge'] }).default('text'),
+  metadata: jsonb('metadata').default({}),
+  readAt: timestamp('read_at', { withTimezone: true }),
+  editedAt: timestamp('edited_at', { withTimezone: true }),
+  deletedAt: timestamp('deleted_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+}, (table) => {
+  return {
+    pairingIdIdx: index('idx_messages_pairing_id').on(table.pairingId),
+    senderIdIdx: index('idx_messages_sender_id').on(table.senderId),
+    createdAtIdx: index('idx_messages_created_at').on(table.createdAt),
+  }
+})
+
+// Goals table for fitness objectives
+export const goals = pgTable('goals', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  pairingId: uuid('pairing_id').references(() => pairings.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  description: text('description'),
+  goalType: text('goal_type', { 
+    enum: ['weight_loss', 'weight_gain', 'strength', 'endurance', 'consistency', 'body_composition', 'custom'] 
+  }).notNull(),
+  targetValue: numeric('target_value', { precision: 10, scale: 2 }),
+  targetUnit: text('target_unit'),
+  currentValue: numeric('current_value', { precision: 10, scale: 2 }),
+  startDate: date('start_date').notNull(),
+  targetDate: date('target_date').notNull(),
+  visibility: text('visibility', { enum: ['private', 'buddy_only', 'public'] }).default('buddy_only'),
+  status: text('status', { enum: ['active', 'completed', 'paused', 'failed'] }).default('active'),
+  completedAt: timestamp('completed_at', { withTimezone: true }),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+}, (table) => {
+  return {
+    userIdIdx: index('idx_goals_user_id').on(table.userId),
+    pairingIdIdx: index('idx_goals_pairing_id').on(table.pairingId),
+    statusIdx: index('idx_goals_status').on(table.status),
+    targetDateIdx: index('idx_goals_target_date').on(table.targetDate),
+  }
+})
+
+// Milestones table for significant achievements
+export const milestones = pgTable('milestones', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  pairingId: uuid('pairing_id').references(() => pairings.id, { onDelete: 'cascade' }),
+  goalId: uuid('goal_id').references(() => goals.id, { onDelete: 'set null' }),
+  title: text('title').notNull(),
+  description: text('description'),
+  milestoneType: text('milestone_type', { 
+    enum: ['workout_count', 'streak', 'weight_change', 'strength_pr', 'time_based', 'goal_completion', 'anniversary', 'custom'] 
+  }).notNull(),
+  value: numeric('value', { precision: 10, scale: 2 }),
+  unit: text('unit'),
+  icon: text('icon'),
+  celebrated: boolean('celebrated').default(false),
+  celebratedAt: timestamp('celebrated_at', { withTimezone: true }),
+  metadata: jsonb('metadata').default({}),
+  achievedAt: timestamp('achieved_at', { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+}, (table) => {
+  return {
+    userIdIdx: index('idx_milestones_user_id').on(table.userId),
+    pairingIdIdx: index('idx_milestones_pairing_id').on(table.pairingId),
+    goalIdIdx: index('idx_milestones_goal_id').on(table.goalId),
+    milestoneTypeIdx: index('idx_milestones_type').on(table.milestoneType),
+    achievedAtIdx: index('idx_milestones_achieved_at').on(table.achievedAt),
+  }
+})
+
+// Messages relations
+export const messagesRelations = relations(messages, ({ one }) => ({
+  pairing: one(pairings, {
+    fields: [messages.pairingId],
+    references: [pairings.id],
+  }),
+  sender: one(users, {
+    fields: [messages.senderId],
+    references: [users.id],
+  }),
+}))
+
+// Goals relations
+export const goalsRelations = relations(goals, ({ one, many }) => ({
+  user: one(users, {
+    fields: [goals.userId],
+    references: [users.id],
+  }),
+  pairing: one(pairings, {
+    fields: [goals.pairingId],
+    references: [pairings.id],
+  }),
+  milestones: many(milestones),
+}))
+
+// Milestones relations
+export const milestonesRelations = relations(milestones, ({ one }) => ({
+  user: one(users, {
+    fields: [milestones.userId],
+    references: [users.id],
+  }),
+  pairing: one(pairings, {
+    fields: [milestones.pairingId],
+    references: [pairings.id],
+  }),
+  goal: one(goals, {
+    fields: [milestones.goalId],
+    references: [goals.id],
+  }),
+}))
+
 // Type exports
 export type User = InferSelectModel<typeof users>;
 export type Workout = InferSelectModel<typeof workouts>;
@@ -510,3 +638,6 @@ export type ChallengeParticipant = InferSelectModel<typeof challengeParticipants
 export type SeasonalCompetition = InferSelectModel<typeof seasonalCompetitions>;
 export type SeasonalCompetitionParticipant = InferSelectModel<typeof seasonalCompetitionParticipants>;
 export type ComebackMechanic = InferSelectModel<typeof comebackMechanics>;
+export type Message = InferSelectModel<typeof messages>;
+export type Goal = InferSelectModel<typeof goals>;
+export type Milestone = InferSelectModel<typeof milestones>;

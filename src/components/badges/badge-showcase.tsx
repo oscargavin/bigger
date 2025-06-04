@@ -38,20 +38,19 @@ export function BadgeShowcase() {
   return (
     <div className="space-y-6">
       {/* Overall Progress */}
-      <Card className="card-elevated hover-lift overflow-hidden relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent dark:from-amber-400/10" />
-        <CardHeader className="relative">
+      <Card className="border-border/50 bg-muted/30">
+        <CardHeader>
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl">Your Achievements</CardTitle>
               <CardDescription>Unlock badges by reaching fitness milestones</CardDescription>
             </div>
-            <div className="rounded-lg bg-amber-100 dark:bg-amber-900/30 p-3 ring-1 ring-amber-200 dark:ring-amber-800">
+            <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
               <Trophy className="h-6 w-6 text-amber-600 dark:text-amber-400" />
             </div>
           </div>
         </CardHeader>
-        <CardContent className="relative space-y-4">
+        <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Overall Progress</span>
             <span className="text-sm text-muted-foreground">{totalEarned} / {totalBadges} badges</span>
@@ -59,13 +58,13 @@ export function BadgeShowcase() {
           <Progress value={completionPercentage} className="h-3" />
           <div className="grid grid-cols-3 gap-4 pt-2">
             <div className="text-center">
-              <div className="text-2xl font-bold bg-gradient-to-br from-amber-600 to-amber-500 dark:from-amber-400 dark:to-amber-300 bg-clip-text text-transparent">
+              <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
                 {earnedBadges.length}
               </div>
               <p className="text-xs text-muted-foreground">Earned</p>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-brand-600 dark:text-brand-400">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                 {inProgressBadges.length}
               </div>
               <p className="text-xs text-muted-foreground">In Progress</p>
@@ -93,11 +92,11 @@ export function BadgeShowcase() {
         <TabsContent value={selectedCategory} className="space-y-6 mt-6">
           {/* Earned Badges */}
           {earnedBadges.length > 0 && (
-            <Card className="card-glass border-2 border-border/50 shadow-soft-xl">
+            <Card className="border-border/50 bg-muted/30">
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Trophy className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                  <CardTitle className="text-lg">Earned Badges</CardTitle>
+                  <CardTitle className="text-xl">Earned Badges</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -108,11 +107,11 @@ export function BadgeShowcase() {
 
           {/* In Progress Badges */}
           {inProgressBadges.length > 0 && (
-            <Card className="card-interactive border-2 border-border dark:border-border/50">
+            <Card className="border-border/50">
               <CardHeader>
                 <div className="flex items-center gap-2">
-                  <Target className="h-5 w-5 text-brand-600 dark:text-brand-400" />
-                  <CardTitle className="text-lg">In Progress</CardTitle>
+                  <Target className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  <CardTitle className="text-xl">In Progress</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -123,11 +122,11 @@ export function BadgeShowcase() {
 
           {/* Locked Badges */}
           {lockedBadges.length > 0 && (
-            <Card>
+            <Card className="border-border/50">
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Lock className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                  <CardTitle className="text-lg">Locked Badges</CardTitle>
+                  <CardTitle className="text-xl">Locked Badges</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>

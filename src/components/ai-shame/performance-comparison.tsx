@@ -13,10 +13,10 @@ export function PerformanceComparison() {
     return (
       <Card className="card-glass p-6">
         <div className="space-y-4">
-          <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded animate-pulse" />
+          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
           <div className="space-y-3">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-16 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded animate-pulse" />
+              <div key={i} className="h-16 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
             ))}
           </div>
         </div>
@@ -33,7 +33,7 @@ export function PerformanceComparison() {
       buddyValue: data.buddyStats.currentStreak,
       icon: Flame,
       unit: 'days',
-      colorClass: 'text-orange-500'
+      colorClass: 'text-amber-500'
     },
     {
       label: 'Weekly Workouts',
@@ -41,7 +41,7 @@ export function PerformanceComparison() {
       buddyValue: data.buddyStats.weeklyWorkouts,
       icon: Activity,
       unit: '',
-      colorClass: 'text-blue-500'
+      colorClass: 'text-primary'
     },
     {
       label: 'Consistency Rate',
@@ -86,10 +86,10 @@ export function PerformanceComparison() {
                   <span className="font-medium">{comp.label}</span>
                 </div>
                 <div className="flex items-center gap-4 text-xs">
-                  <span className={cn('font-semibold', isAhead ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-600 dark:text-gray-400')}>
+                  <span className={cn('font-semibold', isAhead ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground')}>
                     You: {comp.userValue}{comp.unit}
                   </span>
-                  <span className={cn('font-semibold', !isAhead ? 'text-red-600 dark:text-red-400' : 'text-gray-600 dark:text-gray-400')}>
+                  <span className={cn('font-semibold', !isAhead ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground')}>
                     {data.buddyName}: {comp.buddyValue}{comp.unit}
                   </span>
                 </div>
@@ -113,8 +113,8 @@ export function PerformanceComparison() {
 
       {/* Exercise Comparisons */}
       {data.comparison.exerciseComparison && data.comparison.exerciseComparison.length > 0 && (
-        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
-          <h4 className="text-sm font-semibold mb-3 text-gray-600 dark:text-gray-400">
+        <div className="mt-6 pt-6 border-t border-border/50">
+          <h4 className="text-sm font-semibold mb-3 text-muted-foreground">
             Strength Comparison
           </h4>
           <div className="space-y-2">

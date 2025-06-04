@@ -40,10 +40,10 @@ export function QuickStats() {
               className={cn(
                 "h-full transition-all duration-500",
                 weekProgress >= 100
-                  ? "bg-gradient-to-r from-emerald-500 to-emerald-600"
+                  ? "bg-emerald-500"
                   : weekProgress >= 60
-                  ? "bg-gradient-to-r from-brand-500 to-brand-600"
-                  : "bg-gradient-to-r from-amber-500 to-amber-600"
+                  ? "bg-primary"
+                  : "bg-amber-500"
               )}
               style={{ width: `${Math.min(100, weekProgress)}%` }}
             />

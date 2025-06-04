@@ -69,6 +69,7 @@ export function WorkoutActions({
         description: "Your workout has been deleted successfully.",
       })
       setIsDeleteOpen(false)
+      // Ensure data is refreshed
       onDelete?.()
     },
     onError: (error) => {
@@ -173,18 +174,19 @@ export function WorkoutActions({
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] border-border/50">
           <DialogHeader>
-            <DialogTitle>Delete Workout</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-xl font-semibold">Delete Workout</DialogTitle>
+            <DialogDescription className="text-base text-muted-foreground mt-3">
               Are you sure you want to delete this workout? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="mt-6">
             <Button 
               variant="outline" 
               onClick={() => setIsDeleteOpen(false)}
               disabled={deleteWorkout.isPending}
+              className="h-11"
             >
               Cancel
             </Button>
@@ -192,6 +194,7 @@ export function WorkoutActions({
               variant="destructive"
               onClick={handleDelete}
               disabled={deleteWorkout.isPending}
+              className="h-11 bg-destructive hover:bg-destructive/90"
             >
               {deleteWorkout.isPending ? (
                 <>
@@ -199,7 +202,7 @@ export function WorkoutActions({
                   Deleting...
                 </>
               ) : (
-                'Delete'
+                'Delete Workout'
               )}
             </Button>
           </DialogFooter>

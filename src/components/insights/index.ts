@@ -1,0 +1,5 @@
+export { InsightsDashboard } from './insights-dashboard'
+export { WorkoutPatterns } from './workout-patterns'
+export { ProgressSummaryCard } from './progress-summary'
+export { WeaknessesDisplay } from './weaknesses-display'
+export { PersonalizedGoals } from './personalized-goals'

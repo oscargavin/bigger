@@ -9,10 +9,15 @@ import { Label } from '@/components/ui/label'
 import { Search, UserPlus, X, Check, Clock, Users } from 'lucide-react'
 import type { User } from '@/types/api'
 import { HeadToHead } from '@/components/comparison/head-to-head'
+import { MessageList } from '@/components/messages/message-list'
+import { QuickMessage } from '@/components/messages/quick-message'
+import { MilestoneCelebrations } from '@/components/milestones/milestone-celebrations'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function BuddyPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const utils = api.useUtils()
+  const { data: user } = api.auth.getUser.useQuery()
 
   // Queries
   const { data: currentPairing } = api.pairings.getCurrentPairing.useQuery()
@@ -64,82 +69,122 @@ export default function BuddyPage() {
   // If user has an active pairing, show that
   if (currentPairing) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold">Your Gym Buddy</h1>
-          <p className="text-muted-foreground">Stay accountable together</p>
+          <h1 className="text-4xl font-bold tracking-tight">Your Gym Buddy</h1>
+          <p className="text-lg text-muted-foreground mt-2">Stay accountable together</p>
         </div>
 
-        <Card className="card-interactive border-2 border-border dark:border-border/50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Current Partnership
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-violet-500 to-brand-500 dark:from-violet-400 dark:to-brand-400" />
-                <div>
-                  <p className="font-semibold">{currentPairing.buddy.fullName}</p>
-                  <p className="text-sm text-muted-foreground">@{currentPairing.buddy.username}</p>
-                </div>
-              </div>
-              <div className="text-right text-sm text-muted-foreground">
-                <p>Partners since</p>
-                <p>{new Date(currentPairing.startedAt!).toLocaleDateString()}</p>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button
-              variant="destructive"
-              onClick={() => endPairing.mutate({ pairingId: currentPairing.id })}
-              disabled={endPairing.isPending}
-            >
-              End Partnership
-            </Button>
-          </CardFooter>
-        </Card>
+        <Tabs defaultValue="overview" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
+            <TabsTrigger value="milestones">Milestones</TabsTrigger>
+          </TabsList>
 
-        {/* Head-to-Head Comparison */}
-        {headToHeadStats && (
-          <HeadToHead
-            user={headToHeadStats.user}
-            partner={headToHeadStats.partner}
-          />
-        )}
+          <TabsContent value="overview" className="space-y-8">
+            <Card className="border-border/50 bg-surface">
+              <CardHeader className="pb-6">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-full bg-violet-500/10 p-2">
+                    <Users className="h-5 w-5 text-violet-600" />
+                  </div>
+                  <CardTitle className="text-2xl">Current Partnership</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center">
+                      <span className="text-lg font-semibold">
+                        {currentPairing.buddy.username.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-lg font-semibold">{currentPairing.buddy.fullName}</p>
+                      <p className="text-muted-foreground">@{currentPairing.buddy.username}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-muted-foreground">Partners since</p>
+                    <p className="font-medium">{new Date(currentPairing.startedAt!).toLocaleDateString()}</p>
+                  </div>
+                </div>
+
+                {/* Quick Message Widget */}
+                <QuickMessage 
+                  pairingId={currentPairing.id} 
+                  partnerName={currentPairing.buddy.fullName}
+                />
+              </CardContent>
+              <CardFooter className="pt-6 border-t border-border/50">
+                <Button
+                  variant="destructive"
+                  onClick={() => endPairing.mutate({ pairingId: currentPairing.id })}
+                  disabled={endPairing.isPending}
+                >
+                  End Partnership
+                </Button>
+              </CardFooter>
+            </Card>
+
+            {/* Head-to-Head Comparison */}
+            {headToHeadStats && (
+              <HeadToHead
+                user={headToHeadStats.user}
+                partner={headToHeadStats.partner}
+              />
+            )}
+          </TabsContent>
+
+          <TabsContent value="messages">
+            <MessageList 
+              pairingId={currentPairing.id} 
+              currentUserId={user?.id || ''}
+            />
+          </TabsContent>
+
+          <TabsContent value="milestones">
+            <MilestoneCelebrations />
+          </TabsContent>
+        </Tabs>
       </div>
     )
   }
 
   // Otherwise show search and requests
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Find a Gym Buddy</h1>
-        <p className="text-muted-foreground">Partner up for accountability and motivation</p>
+        <h1 className="text-4xl font-bold tracking-tight">Find a Gym Buddy</h1>
+        <p className="text-lg text-muted-foreground mt-2">Partner up for accountability and motivation</p>
       </div>
 
       {/* Pending Requests */}
       {pendingRequests && pendingRequests.length > 0 && (
-        <Card className="card-elevated hover-lift overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent dark:from-emerald-400/10" />
-          <CardHeader className="relative">
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              Pending Requests
-            </CardTitle>
-            <CardDescription>People who want to be your gym buddy</CardDescription>
+        <Card className="border-border/50 bg-surface">
+          <CardHeader className="pb-6">
+            <div className="flex items-center gap-3">
+              <div className="rounded-full bg-emerald-500/10 p-2">
+                <Clock className="h-5 w-5 text-emerald-600" />
+              </div>
+              <div>
+                <CardTitle className="text-xl">Pending Requests</CardTitle>
+                <CardDescription>People who want to be your gym buddy</CardDescription>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent className="relative space-y-3">
+          <CardContent className="space-y-3">
             {pendingRequests.map((request) => (
-              <div key={request.id} className="flex items-center justify-between rounded-lg border border-border/50 bg-surface-raised dark:bg-surface-base p-3 hover:bg-surface-overlay dark:hover:bg-surface-raised transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 dark:from-emerald-300 dark:to-emerald-500" />
+              <div key={request.id} className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/5 p-4 hover:bg-muted/10 transition-all duration-200">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                    <span className="font-medium">
+                      {request.from.username.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
                   <div>
-                    <p className="font-medium">{request.from.fullName}</p>
+                    <p className="font-semibold">{request.from.fullName}</p>
                     <p className="text-sm text-muted-foreground">@{request.from.username}</p>
                   </div>
                 </div>
@@ -169,22 +214,29 @@ export default function BuddyPage() {
 
       {/* Sent Requests */}
       {sentRequests && sentRequests.length > 0 && (
-        <Card className="card-elevated hover-lift overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-500/10 to-transparent dark:from-brand-400/10" />
-          <CardHeader className="relative">
-            <CardTitle className="flex items-center gap-2">
-              <UserPlus className="h-5 w-5 text-brand-600 dark:text-brand-400" />
-              Sent Requests
-            </CardTitle>
-            <CardDescription>Waiting for response</CardDescription>
+        <Card className="border-border/50 bg-surface">
+          <CardHeader className="pb-6">
+            <div className="flex items-center gap-3">
+              <div className="rounded-full bg-blue-500/10 p-2">
+                <UserPlus className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <CardTitle className="text-xl">Sent Requests</CardTitle>
+                <CardDescription>Waiting for response</CardDescription>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent className="relative space-y-3">
+          <CardContent className="space-y-3">
             {sentRequests.map((request) => (
-              <div key={request.id} className="flex items-center justify-between rounded-lg border border-border/50 bg-surface-raised dark:bg-surface-base p-3 hover:bg-surface-overlay dark:hover:bg-surface-raised transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 dark:from-brand-300 dark:to-brand-500" />
+              <div key={request.id} className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/5 p-4 hover:bg-muted/10 transition-all duration-200">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                    <span className="font-medium">
+                      {request.to.username.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
                   <div>
-                    <p className="font-medium">{request.to.fullName}</p>
+                    <p className="font-semibold">{request.to.fullName}</p>
                     <p className="text-sm text-muted-foreground">@{request.to.username}</p>
                   </div>
                 </div>
@@ -203,14 +255,14 @@ export default function BuddyPage() {
       )}
 
       {/* Search for Users */}
-      <Card className="card-glass border-2 border-border/50 shadow-soft-xl">
-        <CardHeader>
-          <CardTitle>Search for a Buddy</CardTitle>
+      <Card className="border-border/50 bg-surface">
+        <CardHeader className="pb-6">
+          <CardTitle className="text-2xl">Search for a Buddy</CardTitle>
           <CardDescription>Find someone to keep you accountable</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="search">Search by username or name</Label>
+            <Label htmlFor="search" className="text-sm font-medium">Search by username or name</Label>
             <div className="flex gap-2">
               <Input
                 id="search"
@@ -218,8 +270,9 @@ export default function BuddyPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
+                className="h-11"
               />
-              <Button size="icon" variant="outline" disabled={!searchQuery || isSearching}>
+              <Button size="icon" variant="outline" disabled={!searchQuery || isSearching} className="h-11 w-11">
                 <Search className="h-4 w-4" />
               </Button>
             </div>
@@ -228,13 +281,17 @@ export default function BuddyPage() {
           {/* Search Results */}
           {searchResults && searchResults.length > 0 && (
             <div className="space-y-3">
-              <p className="text-sm font-medium">Search Results</p>
+              <p className="text-sm font-medium text-muted-foreground">Search Results</p>
               {searchResults.map((user) => (
-                <div key={user.id} className="flex items-center justify-between rounded-lg border border-border/50 bg-surface-raised dark:bg-surface-base p-3 hover:bg-surface-overlay dark:hover:bg-surface-raised transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-violet-400 to-violet-600 dark:from-violet-300 dark:to-violet-500" />
+                <div key={user.id} className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/5 p-4 hover:bg-muted/10 transition-all duration-200">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                      <span className="font-medium">
+                        {user.username.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
                     <div>
-                      <p className="font-medium">{user.fullName}</p>
+                      <p className="font-semibold">{user.fullName}</p>
                       <p className="text-sm text-muted-foreground">@{user.username}</p>
                     </div>
                   </div>
@@ -243,7 +300,7 @@ export default function BuddyPage() {
                     onClick={() => sendRequest.mutate({ toUserId: user.id })}
                     disabled={sendRequest.isPending}
                   >
-                    <UserPlus className="h-4 w-4 mr-1" />
+                    <UserPlus className="h-4 w-4 mr-1.5" />
                     Request
                   </Button>
                 </div>
@@ -252,9 +309,11 @@ export default function BuddyPage() {
           )}
 
           {searchResults && searchResults.length === 0 && searchQuery && (
-            <p className="text-center text-sm text-muted-foreground py-4">
-              No users found matching &quot;{searchQuery}&quot;
-            </p>
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">
+                No users found matching &ldquo;{searchQuery}&rdquo;
+              </p>
+            </div>
           )}
         </CardContent>
       </Card>

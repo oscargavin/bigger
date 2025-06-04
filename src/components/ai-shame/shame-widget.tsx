@@ -62,22 +62,24 @@ export function ShameWidget({ className, showToast = true }: ShameWidgetProps) {
 
   return (
     <div className={cn(
-      'relative inline-flex items-center justify-center',
+      'flex items-center gap-2 px-3 py-2 rounded-lg',
+      style.bgColor,
+      'bg-opacity-10 border',
+      data.daysSinceLastWorkout >= 7 ? 'border-red-500/30' : 
+      data.daysSinceLastWorkout >= 4 ? 'border-amber-500/30' : 'border-orange-500/30',
       className
     )}>
-      <div className={cn(
-        'rounded-full p-2',
-        style.bgColor,
-        'text-white shadow-lg',
+      <Icon className={cn(
+        "w-4 h-4",
+        data.daysSinceLastWorkout >= 7 ? 'text-red-600' : 
+        data.daysSinceLastWorkout >= 4 ? 'text-amber-600' : 'text-orange-600',
         style.pulse && 'animate-pulse'
-      )}>
-        <Icon className="w-5 h-5" />
+      )} />
+      <div className="flex-1">
+        <p className="text-xs font-medium text-foreground">
+          {data.daysSinceLastWorkout} days since workout
+        </p>
       </div>
-      
-      {/* Badge showing days */}
-      <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm">
-        {data.daysSinceLastWorkout}
-      </span>
     </div>
   )
 }

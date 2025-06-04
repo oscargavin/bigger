@@ -16,15 +16,14 @@ import {
 
 export default function GamificationPage() {
   return (
-    <div className="container max-w-7xl mx-auto p-6 space-y-6">
+    <div className="space-y-8">
       {/* Page Header */}
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Trophy className="h-8 w-8 text-yellow-500" />
-          Gamification Hub
+      <div>
+        <h1 className="text-4xl font-bold tracking-tight">
+          Competitions & Challenges
         </h1>
-        <p className="text-muted-foreground">
-          Track your progress, compete in challenges, and climb the leaderboard!
+        <p className="text-lg text-muted-foreground mt-2">
+          Track your progress, compete in challenges, and climb the leaderboard
         </p>
       </div>
       
@@ -33,49 +32,49 @@ export default function GamificationPage() {
       
       {/* Main Content Tabs */}
       <Tabs defaultValue="challenges" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="challenges" className="gap-2">
+        <TabsList className="grid w-full grid-cols-3 h-11">
+          <TabsTrigger value="challenges" className="gap-2 data-[state=active]:bg-primary/10">
             <Target className="h-4 w-4" />
             Challenges
           </TabsTrigger>
-          <TabsTrigger value="competition" className="gap-2">
+          <TabsTrigger value="competition" className="gap-2 data-[state=active]:bg-primary/10">
             <Calendar className="h-4 w-4" />
-            Monthly Competition
+            Competition
           </TabsTrigger>
-          <TabsTrigger value="leaderboard" className="gap-2">
+          <TabsTrigger value="leaderboard" className="gap-2 data-[state=active]:bg-primary/10">
             <Medal className="h-4 w-4" />
             Leaderboard
           </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="challenges" className="space-y-4">
+        <TabsContent value="challenges" className="space-y-6">
           <div>
-            <h2 className="text-2xl font-semibold mb-4">Active Challenges</h2>
-            <p className="text-muted-foreground mb-6">
-              Join challenges to earn bonus points and push your limits!
+            <h2 className="text-2xl font-semibold">Active Challenges</h2>
+            <p className="text-muted-foreground mt-2">
+              Join challenges to earn bonus points and push your limits
             </p>
-            <ChallengesList />
           </div>
+          <ChallengesList />
         </TabsContent>
         
-        <TabsContent value="competition" className="space-y-4">
+        <TabsContent value="competition" className="space-y-6">
           <div>
-            <h2 className="text-2xl font-semibold mb-4">Monthly Competition</h2>
-            <p className="text-muted-foreground mb-6">
-              Compete against the community for monthly glory and prizes!
+            <h2 className="text-2xl font-semibold">Monthly Competition</h2>
+            <p className="text-muted-foreground mt-2">
+              Compete against the community for monthly glory and prizes
             </p>
-            <SeasonalCompetition />
           </div>
+          <SeasonalCompetition />
         </TabsContent>
         
-        <TabsContent value="leaderboard" className="space-y-4">
+        <TabsContent value="leaderboard" className="space-y-6">
           <div>
-            <h2 className="text-2xl font-semibold mb-4">Global Rankings</h2>
-            <p className="text-muted-foreground mb-6">
-              See how you stack up against other athletes in the community!
+            <h2 className="text-2xl font-semibold">Global Rankings</h2>
+            <p className="text-muted-foreground mt-2">
+              See how you stack up against other athletes in the community
             </p>
-            <Leaderboard />
           </div>
+          <Leaderboard />
         </TabsContent>
       </Tabs>
     </div>

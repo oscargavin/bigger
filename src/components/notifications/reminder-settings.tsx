@@ -94,13 +94,13 @@ export function ReminderSettings() {
   }
 
   return (
-    <Card className="card-interactive border-2 border-border dark:border-border/50">
+    <Card className="border-border/50 shadow-sm">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <div className="rounded-lg bg-brand-100 dark:bg-brand-900/30 p-2 ring-1 ring-brand-200 dark:ring-brand-800">
-            <Bell className="h-4 w-4 text-brand-600 dark:text-brand-400" />
+          <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+            <Bell className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           </div>
-          <CardTitle className="text-lg">Daily Workout Reminders</CardTitle>
+          <CardTitle className="text-xl">Daily Workout Reminders</CardTitle>
         </div>
         <CardDescription>
           Get reminded to log your workouts and maintain your streak
