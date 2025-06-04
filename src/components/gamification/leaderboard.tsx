@@ -49,7 +49,7 @@ export function Leaderboard({ className }: LeaderboardProps) {
         {/* Header */}
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Trophy className="h-6 w-6 text-yellow-500" />
+            <Trophy className="h-6 w-6 text-amber-600 dark:text-amber-400" />
             Leaderboard
           </h2>
           <Badge variant="outline" className="gap-1">
@@ -151,9 +151,9 @@ function PodiumCard({ entry, rank, isCurrentUser }: PodiumCardProps) {
   const getRankIcon = () => {
     switch (rank) {
       case 1:
-        return <Crown className="h-8 w-8 text-yellow-500" />
+        return <Crown className="h-8 w-8 text-amber-600 dark:text-amber-400" />
       case 2:
-        return <Medal className="h-6 w-6 text-gray-400" />
+        return <Medal className="h-6 w-6 text-gray-500 dark:text-gray-400" />
       case 3:
         return <Medal className="h-6 w-6 text-orange-600" />
     }
@@ -162,11 +162,11 @@ function PodiumCard({ entry, rank, isCurrentUser }: PodiumCardProps) {
   const getRankColor = () => {
     switch (rank) {
       case 1:
-        return 'bg-amber-500'
+        return 'bg-amber-600 dark:bg-amber-500'
       case 2:
-        return 'bg-gray-400'
+        return 'bg-gray-500 dark:bg-gray-400'
       case 3:
-        return 'bg-orange-500'
+        return 'bg-orange-600 dark:bg-orange-500'
     }
   }
   
@@ -187,9 +187,9 @@ function PodiumCard({ entry, rank, isCurrentUser }: PodiumCardProps) {
         <div className={cn(
           'h-20 w-20 rounded-full overflow-hidden ring-4 flex items-center justify-center text-white text-2xl font-bold',
           getRankColor(),
-          rank === 1 && 'ring-amber-400',
-          rank === 2 && 'ring-gray-300',
-          rank === 3 && 'ring-orange-400'
+          rank === 1 && 'ring-amber-500 dark:ring-amber-400',
+          rank === 2 && 'ring-gray-400 dark:ring-gray-300',
+          rank === 3 && 'ring-orange-500 dark:ring-orange-400'
         )}>
           {entry.avatarUrl ? (
             <Image src={entry.avatarUrl} alt={entry.fullName} className="w-full h-full object-cover" fill sizes="80px" />
@@ -214,9 +214,9 @@ function PodiumCard({ entry, rank, isCurrentUser }: PodiumCardProps) {
       <div className="pt-2">
         <p className={cn(
           'text-2xl font-bold',
-          rank === 1 && 'text-amber-600',
-          rank === 2 && 'text-gray-600',
-          rank === 3 && 'text-orange-600'
+          rank === 1 && 'text-amber-600 dark:text-amber-400',
+          rank === 2 && 'text-gray-600 dark:text-gray-400',
+          rank === 3 && 'text-orange-600 dark:text-orange-400'
         )}>
           {entry.points.toLocaleString()}
         </p>
@@ -269,7 +269,7 @@ function LeaderboardRow({ entry, isCurrentUser }: LeaderboardRowProps) {
           <p className="text-xl font-bold">{entry.points.toLocaleString()}</p>
           <p className="text-xs text-muted-foreground">points</p>
         </div>
-        <TrendingUp className="h-5 w-5 text-emerald-500" />
+        <TrendingUp className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
       </div>
     </div>
   )

@@ -49,77 +49,77 @@ const iconMap: Record<string, any> = {
 }
 
 const colorMap: Record<string, { bg: string; border: string; icon: string }> = {
-  // Colors
+  // Colors aligned with design system
   blue: {
-    bg: 'bg-blue-50 dark:bg-blue-950/30',
-    border: 'border-blue-400 dark:border-blue-600',
-    icon: 'text-blue-600 dark:text-blue-400'
+    bg: 'bg-blue-500/10',
+    border: 'border-blue-500/20',
+    icon: 'text-blue-600 dark:text-blue-500'
   },
   purple: {
-    bg: 'bg-purple-50 dark:bg-purple-950/30',
-    border: 'border-purple-400 dark:border-purple-600',
-    icon: 'text-purple-600 dark:text-purple-400'
+    bg: 'bg-violet-500/10',
+    border: 'border-violet-500/20',
+    icon: 'text-violet-600 dark:text-violet-500'
   },
   gold: {
-    bg: 'bg-amber-50 dark:bg-amber-950/30',
-    border: 'border-amber-400 dark:border-amber-600',
-    icon: 'text-amber-600 dark:text-amber-400'
+    bg: 'bg-amber-500/10',
+    border: 'border-amber-500/20',
+    icon: 'text-amber-600 dark:text-amber-500'
   },
   red: {
-    bg: 'bg-red-50 dark:bg-red-950/30',
-    border: 'border-red-400 dark:border-red-600',
-    icon: 'text-red-600 dark:text-red-400'
+    bg: 'bg-red-500/10',
+    border: 'border-red-500/20',
+    icon: 'text-red-600 dark:text-red-500'
   },
   orange: {
-    bg: 'bg-orange-50 dark:bg-orange-950/30',
-    border: 'border-orange-400 dark:border-orange-600',
-    icon: 'text-orange-600 dark:text-orange-400'
+    bg: 'bg-orange-500/10',
+    border: 'border-orange-500/20',
+    icon: 'text-orange-600 dark:text-orange-500'
   },
   green: {
-    bg: 'bg-green-50 dark:bg-green-950/30',
-    border: 'border-green-400 dark:border-green-600',
-    icon: 'text-green-600 dark:text-green-400'
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/20',
+    icon: 'text-emerald-600 dark:text-emerald-500'
   },
   emerald: {
-    bg: 'bg-emerald-50 dark:bg-emerald-950/30',
-    border: 'border-emerald-400 dark:border-emerald-600',
-    icon: 'text-emerald-600 dark:text-emerald-400'
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/20',
+    icon: 'text-emerald-600 dark:text-emerald-500'
   },
   teal: {
-    bg: 'bg-teal-50 dark:bg-teal-950/30',
-    border: 'border-teal-400 dark:border-teal-600',
-    icon: 'text-teal-600 dark:text-teal-400'
+    bg: 'bg-teal-500/10',
+    border: 'border-teal-500/20',
+    icon: 'text-teal-600 dark:text-teal-500'
   },
   indigo: {
-    bg: 'bg-indigo-50 dark:bg-indigo-950/30',
-    border: 'border-indigo-400 dark:border-indigo-600',
-    icon: 'text-indigo-600 dark:text-indigo-400'
+    bg: 'bg-indigo-500/10',
+    border: 'border-indigo-500/20',
+    icon: 'text-indigo-600 dark:text-indigo-500'
   },
   yellow: {
-    bg: 'bg-yellow-50 dark:bg-yellow-950/30',
-    border: 'border-yellow-400 dark:border-yellow-600',
-    icon: 'text-yellow-600 dark:text-yellow-400'
+    bg: 'bg-yellow-500/10',
+    border: 'border-yellow-500/20',
+    icon: 'text-yellow-600 dark:text-yellow-500'
   },
   navy: {
-    bg: 'bg-blue-100 dark:bg-blue-950/50',
-    border: 'border-blue-700 dark:border-blue-700',
-    icon: 'text-blue-700 dark:text-blue-300'
+    bg: 'bg-blue-600/10',
+    border: 'border-blue-600/20',
+    icon: 'text-blue-700 dark:text-blue-400'
   },
   // Rarity colors
   bronze: {
-    bg: 'bg-orange-100 dark:bg-orange-950/40',
-    border: 'border-orange-600 dark:border-orange-700',
-    icon: 'text-orange-700 dark:text-orange-300'
+    bg: 'bg-orange-600/10',
+    border: 'border-orange-600/20',
+    icon: 'text-orange-700 dark:text-orange-400'
   },
   silver: {
-    bg: 'bg-gray-100 dark:bg-gray-900/40',
-    border: 'border-gray-400 dark:border-gray-500',
-    icon: 'text-gray-600 dark:text-gray-300'
+    bg: 'bg-muted',
+    border: 'border-border',
+    icon: 'text-muted-foreground'
   },
   platinum: {
-    bg: 'bg-slate-100 dark:bg-slate-900/40',
-    border: 'border-slate-400 dark:border-slate-500',
-    icon: 'text-slate-600 dark:text-slate-300'
+    bg: 'bg-slate-500/10',
+    border: 'border-slate-500/20',
+    icon: 'text-slate-600 dark:text-slate-400'
   },
 }
 
@@ -234,20 +234,20 @@ export function BadgeDisplay({ badge, size = 'md', showProgress = true, onClick 
             )}
           </button>
         </TooltipTrigger>
-        <TooltipContent side="bottom" className="max-w-xs p-0">
-          <div className="space-y-2 p-3">
+        <TooltipContent side="bottom" className="max-w-xs p-0 !bg-white dark:!bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-lg">
+          <div className="space-y-2 p-3 text-gray-900 dark:text-gray-100">
             <div className="flex items-center gap-2">
               <Icon className={cn(
                 "h-4 w-4",
                 isEarned ? (colorMap[badge.color]?.icon || colorMap.blue.icon) : 'text-gray-400 dark:text-gray-400'
               )} />
-              <p className="font-semibold text-sm">{badge.name}</p>
+              <p className="font-semibold text-sm text-gray-900 dark:text-gray-100">{badge.name}</p>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed">{badge.description}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{badge.description}</p>
             {badge.progress && badge.progress < 100 && (
               <div className="space-y-1">
                 <div className="flex justify-between items-center">
-                  <p className="text-xs font-medium">Progress</p>
+                  <p className="text-xs font-medium text-gray-700 dark:text-gray-300">Progress</p>
                   <p className={cn(
                     "text-xs font-semibold",
                     colorMap[badge.color]?.icon || 'text-blue-500 dark:text-blue-400'
@@ -255,19 +255,16 @@ export function BadgeDisplay({ badge, size = 'md', showProgress = true, onClick 
                     {Math.round(badge.progress)}%
                   </p>
                 </div>
-                <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                   <div 
-                    className={cn(
-                      "h-full transition-all duration-500",
-                      colorMap[badge.color]?.bg || 'bg-blue-500'
-                    )}
+                    className="h-full transition-all duration-500 bg-blue-600 dark:bg-blue-500"
                     style={{ width: `${badge.progress}%` }}
                   />
                 </div>
               </div>
             )}
             {badge.earnedAt && (
-              <p className="text-xs text-muted-foreground pt-1 border-t">
+              <p className="text-xs text-gray-500 dark:text-gray-500 pt-1 border-t border-gray-200 dark:border-gray-700">
                 Earned on {new Date(badge.earnedAt).toLocaleDateString('en-US', { 
                   year: 'numeric', 
                   month: 'short', 

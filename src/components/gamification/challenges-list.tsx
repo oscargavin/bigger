@@ -106,13 +106,13 @@ function ChallengeCard({ challenge, onJoin, isJoining }: ChallengeCardProps) {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'strength':
-        return 'bg-red-500/10'
+        return 'bg-red-600/10 dark:bg-red-500/10'
       case 'consistency':
-        return 'bg-blue-500/10'
+        return 'bg-blue-600/10 dark:bg-blue-500/10'
       case 'endurance':
-        return 'bg-emerald-500/10'
+        return 'bg-emerald-600/10 dark:bg-emerald-500/10'
       default:
-        return 'bg-violet-500/10'
+        return 'bg-violet-600/10 dark:bg-violet-500/10'
     }
   }
   
@@ -158,10 +158,10 @@ function ChallengeCard({ challenge, onJoin, isJoining }: ChallengeCardProps) {
             variant="outline" 
             className={cn(
               'gap-1',
-              challenge.tier === 'platinum' && 'border-purple-500 text-purple-500',
-              challenge.tier === 'gold' && 'border-yellow-500 text-yellow-500',
-              challenge.tier === 'silver' && 'border-gray-500 text-gray-500',
-              challenge.tier === 'bronze' && 'border-orange-500 text-orange-500'
+              challenge.tier === 'platinum' && 'border-violet-600 dark:border-violet-500 text-violet-600 dark:text-violet-400',
+              challenge.tier === 'gold' && 'border-amber-600 dark:border-amber-500 text-amber-600 dark:text-amber-400',
+              challenge.tier === 'silver' && 'border-gray-600 dark:border-gray-500 text-gray-600 dark:text-gray-400',
+              challenge.tier === 'bronze' && 'border-orange-600 dark:border-orange-500 text-orange-600 dark:text-orange-400'
             )}
           >
             {getCategoryIcon(challenge.category)}
@@ -172,19 +172,19 @@ function ChallengeCard({ challenge, onJoin, isJoining }: ChallengeCardProps) {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4">
           <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-yellow-500" />
+            <Zap className="h-4 w-4 text-amber-600 dark:text-amber-400" />
             <span className="text-sm">
               <span className="font-semibold">{challenge.pointsReward}</span> pts
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-blue-500" />
+            <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
             <span className="text-sm">
               <span className="font-semibold">{challenge.participantCount}</span> joined
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-green-500" />
+            <Clock className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
             <span className="text-sm">
               {formatDistanceToNow(new Date(challenge.endDate), { addSuffix: true })}
             </span>

@@ -30,6 +30,7 @@ _Get the basic habit loop working_
 - [x] Photo upload for workout proof (Supabase storage)
 - [x] Basic workout history list view
 - [x] Delete/edit workout entries
+- [x] Speech-to-text for workout notes (OpenAI Whisper API)
 
 ### 🎯 **PHASE 2: Competition & Streaks (Week 3-4)**
 

@@ -51,13 +51,13 @@ export function GoalList() {
   });
 
   const goalTypeConfig = {
-    weight_loss: { icon: "📉", color: "text-blue-500" },
-    weight_gain: { icon: "📈", color: "text-green-500" },
-    strength: { icon: "💪", color: "text-purple-500" },
-    endurance: { icon: "🏃", color: "text-orange-500" },
-    consistency: { icon: "📅", color: "text-indigo-500" },
-    body_composition: { icon: "🎯", color: "text-pink-500" },
-    custom: { icon: "⭐", color: "text-yellow-500" },
+    weight_loss: { icon: "📉", color: "text-blue-600 dark:text-blue-400" },
+    weight_gain: { icon: "📈", color: "text-emerald-600 dark:text-emerald-400" },
+    strength: { icon: "💪", color: "text-violet-600 dark:text-violet-400" },
+    endurance: { icon: "🏃", color: "text-orange-600 dark:text-orange-400" },
+    consistency: { icon: "📅", color: "text-indigo-600 dark:text-indigo-400" },
+    body_composition: { icon: "🎯", color: "text-pink-600 dark:text-pink-400" },
+    custom: { icon: "⭐", color: "text-amber-600 dark:text-amber-400" },
   };
 
   const calculateProgress = (goal: any) => {
@@ -147,7 +147,7 @@ export function GoalList() {
                       'destructive'
                     }
                     className={
-                      goal.status === 'completed' ? 'bg-emerald-500 text-white border-emerald-500' : ''
+                      goal.status === 'completed' ? 'bg-emerald-600 dark:bg-emerald-500 text-white border-emerald-600 dark:border-emerald-500' : ''
                     }
                   >
                     {goal.status}

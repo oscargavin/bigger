@@ -520,7 +520,7 @@ Provide an honest, insightful analysis that:
 Keep the tone professional but encouraging. Be specific with data points.`
 
       const response = await anthropic.messages.create({
-        model: 'claude-3-sonnet-20240229',
+        model: 'claude-3-haiku-20240307',
         max_tokens: 500,
         temperature: 0.7,
         messages: [{ role: 'user', content: prompt }],

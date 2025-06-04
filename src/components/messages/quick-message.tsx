@@ -4,6 +4,7 @@ import { useState } from "react";
 import { api } from "@/utils/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircleIcon, SendIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -77,7 +78,7 @@ export function QuickMessage({ pairingId, partnerName }: QuickMessageProps) {
             ))}
           </div>
           <div className="flex gap-2">
-            <input
+            <Input
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -90,7 +91,7 @@ export function QuickMessage({ pairingId, partnerName }: QuickMessageProps) {
                 }
               }}
               placeholder="Custom message..."
-              className="flex-1 px-3 py-2 text-sm rounded-md border bg-background"
+              className="flex-1"
             />
             <Button
               size="sm"

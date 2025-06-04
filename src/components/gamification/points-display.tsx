@@ -40,7 +40,7 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
     return (
       <div className={cn('flex items-center gap-4', className)}>
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-lg bg-amber-500">
+          <div className="p-2 rounded-lg bg-amber-600 dark:bg-amber-500">
             <Zap className="h-4 w-4 text-white" />
           </div>
           <div>
@@ -72,7 +72,7 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="p-3 rounded-xl bg-amber-500/10">
-                <Zap className="h-6 w-6 text-amber-600" />
+                <Zap className="h-6 w-6 text-amber-600 dark:text-amber-400" />
               </div>
               <div>
                 <p className="text-2xl font-bold">
@@ -116,7 +116,7 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
           <div className="p-4 rounded-lg border border-border/50 bg-muted/5">
             <div className="flex items-center gap-2 mb-2">
               <div className="p-2 rounded-lg bg-violet-500/10">
-                <Flame className="h-4 w-4 text-violet-600" />
+                <Flame className="h-4 w-4 text-violet-600 dark:text-violet-400" />
               </div>
               <p className="text-sm font-medium">This Month</p>
             </div>
@@ -130,10 +130,10 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
         {consistencyMultiplier > 1 && (
           <div className="flex items-center justify-between p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
             <div className="flex items-center gap-2">
-              <Flame className="h-5 w-5 text-amber-600" />
+              <Flame className="h-5 w-5 text-amber-600 dark:text-amber-400" />
               <span className="text-sm font-medium">Consistency Bonus Active</span>
             </div>
-            <Badge variant="secondary" className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20">
+            <Badge variant="secondary" className="bg-amber-600/10 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-600/20 dark:border-amber-500/20">
               {consistencyMultiplier}x Points
             </Badge>
           </div>

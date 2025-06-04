@@ -84,7 +84,6 @@ export function SignInForm() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  className="h-11"
                 />
               </div>
               <div className="space-y-2">
@@ -98,7 +97,6 @@ export function SignInForm() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
-                  className="h-11"
                 />
               </div>
             </>
@@ -114,7 +112,6 @@ export function SignInForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="h-11"
             />
           </div>
           <div className="space-y-2">
@@ -128,14 +125,14 @@ export function SignInForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="h-11"
             />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4 pt-2">
           <Button 
             type="submit" 
-            className="w-full h-11 text-base font-medium" 
+            className="w-full" 
+            size="lg"
             disabled={loading || signUp.isPending}
           >
             {loading || signUp.isPending ? 'Loading...' : (isSignUp ? 'Create account' : 'Sign in')}

@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { api } from '@/utils/api';
 import { useToast } from '@/hooks/use-toast';
 import { Camera, Plus, Ruler, Weight, Upload, X } from 'lucide-react';
@@ -303,9 +304,8 @@ export function AddProgressSnapshot() {
         {/* Notes */}
         <div className="space-y-2">
           <Label htmlFor="notes">Notes (optional)</Label>
-          <textarea
+          <Textarea
             id="notes"
-            className="w-full min-h-[80px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             value={formData.notes}
             onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
             placeholder="How are you feeling? Any changes to routine?"

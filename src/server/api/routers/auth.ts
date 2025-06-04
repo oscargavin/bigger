@@ -288,7 +288,7 @@ export const authRouter = createTRPCRouter({
   updateUserProfile: protectedProcedure
     .input(
       z.object({
-        fullName: z.string().min(1).optional(),
+        fullName: z.string().optional(),
         bio: z.string().max(500).optional(),
         avatarUrl: z.string().url().optional(),
         timezone: z.string().optional(),
@@ -299,18 +299,26 @@ export const authRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.user.id;
 
+      // Build update object with only provided fields
+      const updateData: any = {
+        updated_at: new Date().toISOString(),
+      };
+
+      if (input.fullName !== undefined) updateData.full_name = input.fullName || null;
+      if (input.bio !== undefined) updateData.bio = input.bio || null;
+      if (input.avatarUrl !== undefined) updateData.avatar_url = input.avatarUrl;
+      if (input.timezone !== undefined) updateData.timezone = input.timezone;
+      if (input.startingWeight !== undefined) {
+        updateData.starting_weight = input.startingWeight ? input.startingWeight.toString() : null;
+      }
+      if (input.height !== undefined) {
+        updateData.height = input.height ? input.height.toString() : null;
+      }
+
       // Update users table
       const { data, error } = await ctx.supabase
         .from('users')
-        .update({
-          full_name: input.fullName,
-          bio: input.bio,
-          avatar_url: input.avatarUrl,
-          timezone: input.timezone,
-          starting_weight: input.startingWeight?.toString(),
-          height: input.height?.toString(),
-          updated_at: new Date().toISOString(),
-        })
+        .update(updateData)
         .eq('id', userId)
         .select()
         .single();

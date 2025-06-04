@@ -96,11 +96,11 @@ export default function BuddyPage() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-8">
-            <Card className="border-border/50 bg-surface">
+            <Card>
               <CardHeader className="pb-6">
                 <div className="flex items-center gap-3">
-                  <div className="rounded-full bg-violet-500/10 p-2">
-                    <Users className="h-5 w-5 text-violet-600" />
+                  <div className="rounded-full bg-accent/10 p-2">
+                    <Users className="h-5 w-5 text-accent" />
                   </div>
                   <CardTitle className="text-2xl">Current Partnership</CardTitle>
                 </div>
@@ -130,7 +130,7 @@ export default function BuddyPage() {
                   partnerName={currentPairing.buddy.fullName}
                 />
               </CardContent>
-              <CardFooter className="pt-6 border-t border-border/50">
+              <CardFooter className="pt-6 border-t border-border">
                 <Dialog open={showEndDialog} onOpenChange={setShowEndDialog}>
                   <DialogTrigger asChild>
                     <Button variant="destructive">
@@ -199,12 +199,11 @@ export default function BuddyPage() {
 
       {/* Pending Requests */}
       {pendingRequests && pendingRequests.length > 0 && (
-        <Card className="border-emerald-500/20 bg-emerald-500/5 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-emerald-500/10 animate-pulse pointer-events-none" />
+        <Card className="border-2 border-success/20 relative overflow-hidden">
           <CardHeader className="pb-6 relative">
             <div className="flex items-center gap-3">
-              <div className="rounded-full bg-emerald-500/20 p-2 animate-pulse">
-                <Clock className="h-5 w-5 text-emerald-600" />
+              <div className="rounded-full bg-success/10 p-2">
+                <Clock className="h-5 w-5 text-success" />
               </div>
               <div>
                 <CardTitle className="text-xl">Pending Buddy Requests ({pendingRequests.length})</CardTitle>
@@ -214,7 +213,7 @@ export default function BuddyPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {pendingRequests.map((request) => (
-              <div key={request.id} className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/5 p-4 hover:bg-muted/10 transition-all duration-200">
+              <div key={request.id} className="flex items-center justify-between rounded-xl border border-border bg-muted/50 p-4 hover:bg-muted transition-colors duration-200">
                 <div className="flex items-center gap-4">
                   <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
                     <span className="font-medium">
@@ -230,7 +229,7 @@ export default function BuddyPage() {
                   <Button
                     size="sm"
                     variant="default"
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white"
+                    className="bg-success hover:bg-success/90 text-success-foreground"
                     onClick={() => acceptRequest.mutate({ requestId: request.id })}
                     disabled={acceptRequest.isPending}
                   >
@@ -254,11 +253,11 @@ export default function BuddyPage() {
 
       {/* Sent Requests */}
       {sentRequests && sentRequests.length > 0 && (
-        <Card className="border-border/50 bg-surface">
+        <Card>
           <CardHeader className="pb-6">
             <div className="flex items-center gap-3">
-              <div className="rounded-full bg-blue-500/10 p-2">
-                <UserPlus className="h-5 w-5 text-blue-600" />
+              <div className="rounded-full bg-primary/10 p-2">
+                <UserPlus className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <CardTitle className="text-xl">Sent Requests</CardTitle>
@@ -268,7 +267,7 @@ export default function BuddyPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {sentRequests.map((request) => (
-              <div key={request.id} className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/5 p-4 hover:bg-muted/10 transition-all duration-200">
+              <div key={request.id} className="flex items-center justify-between rounded-xl border border-border bg-muted/50 p-4 hover:bg-muted transition-colors duration-200">
                 <div className="flex items-center gap-4">
                   <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
                     <span className="font-medium">
@@ -295,7 +294,7 @@ export default function BuddyPage() {
       )}
 
       {/* Search for Users */}
-      <Card className="border-border/50 bg-surface">
+      <Card>
         <CardHeader className="pb-6">
           <CardTitle className="text-2xl">Search for a Buddy</CardTitle>
           <CardDescription>Find someone to keep you accountable</CardDescription>
@@ -331,7 +330,7 @@ export default function BuddyPage() {
                 {searchQuery ? 'Search Results' : 'Available Users'} ({searchResults.length})
               </p>
               {searchResults.map((user) => (
-                <div key={user.id} className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/5 p-4 hover:bg-muted/10 transition-all duration-200">
+                <div key={user.id} className="flex items-center justify-between rounded-xl border border-border bg-muted/50 p-4 hover:bg-muted transition-colors duration-200">
                   <div className="flex items-center gap-4">
                     <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
                       <span className="font-medium">
@@ -348,7 +347,7 @@ export default function BuddyPage() {
                       size="sm"
                       variant="secondary"
                       disabled
-                      className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/10"
+                      className="bg-success/10 text-success hover:bg-success/10"
                     >
                       <CheckCircle className="h-4 w-4 mr-1.5" />
                       Requested

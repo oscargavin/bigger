@@ -1,10 +1,50 @@
 @import "tailwindcss";
 
+/* Define colors for Tailwind v4 */
+@theme {
+  /* Light mode colors - pure neutral grays */
+  --color-background: hsl(0 0% 98%);
+  --color-foreground: hsl(0 0% 3.9%);
+  
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(0 0% 3.9%);
+  
+  --color-primary: hsl(217 91% 60%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  
+  --color-muted: hsl(0 0% 96%);
+  --color-muted-foreground: hsl(0 0% 45%);
+  
+  --color-border: hsl(0 0% 90%);
+  --color-input: hsl(0 0% 90%);
+  --color-ring: hsl(217 91% 60%);
+  
+  --color-secondary: hsl(0 0% 96%);
+  --color-secondary-foreground: hsl(0 0% 9%);
+  
+  --color-destructive: hsl(0 72% 51%);
+  --color-destructive-foreground: hsl(0 0% 98%);
+  
+  --color-accent: hsl(262 83% 58%);
+  --color-accent-foreground: hsl(0 0% 100%);
+  
+  --color-success: hsl(158 64% 42%);
+  --color-success-foreground: hsl(0 0% 100%);
+  
+  --color-warning: hsl(43 96% 56%);
+  --color-warning-foreground: hsl(0 0% 0%);
+  
+  /* Surface elevation levels */
+  --color-surface: hsl(0 0% 100%);
+  --color-surface-raised: hsl(0 0% 99%);
+  --color-surface-overlay: hsl(0 0% 98%);
+}
+
 @layer base {
   :root {
-    /* Light mode - high contrast with pure whites and deep grays */
-    --background: 0 0% 100%;
-    --background-subtle: 0 0% 98%;
+    /* Light mode - blue-tinted gray background */
+    --background: 210 20% 98%;
+    --background-subtle: 210 20% 96%;
     --foreground: 0 0% 5%;
     --foreground-muted: 0 0% 32%;
     
@@ -14,9 +54,9 @@
     --surface-overlay: 0 0% 97%;
     --surface-high: 0 0% 95%;
     
-    /* Card with subtle elevation */
+    /* Card with subtle elevation - pure white for contrast */
     --card: 0 0% 100%;
-    --card-hover: 0 0% 98%;
+    --card-hover: 210 20% 99%;
     --card-foreground: 0 0% 5%;
     
     /* Sidebar with subtle separation */
@@ -37,7 +77,7 @@
     --secondary-foreground: 0 0% 5%;
     
     /* Muted elements */
-    --muted: 0 0% 96%;
+    --muted: 210 20% 94%;
     --muted-foreground: 0 0% 40%;
     
     /* Accent colors for highlights */
@@ -71,61 +111,61 @@
   }
 
   .dark {
-    /* Dark mode - true blacks with bright accents */
-    --background: 0 0% 2%;
-    --background-subtle: 0 0% 5%;
-    --foreground: 0 0% 95%;
-    --foreground-muted: 0 0% 65%;
+    /* Dark mode - more balanced grays */
+    --background: 240 6% 10%;
+    --background-subtle: 240 5% 12%;
+    --foreground: 0 0% 98%;
+    --foreground-muted: 240 5% 64.9%;
     
     /* Surface hierarchy with clear elevation */
-    --surface-base: 0 0% 4%;
-    --surface-raised: 0 0% 7%;
-    --surface-overlay: 0 0% 10%;
-    --surface-high: 0 0% 13%;
+    --surface-base: 240 5.9% 10%;
+    --surface-raised: 240 4.9% 11.9%;
+    --surface-overlay: 240 4.9% 13.7%;
+    --surface-high: 240 4.9% 15.7%;
     
     /* Card with visible elevation */
-    --card: 0 0% 7%;
-    --card-hover: 0 0% 9%;
-    --card-foreground: 0 0% 95%;
-    
+    --card: 240 10% 25%;
+    --card-hover: 240 10% 30%;
+    --card-foreground: 0 0% 98%;
+  
     /* Sidebar with subtle separation */
-    --sidebar-background: 0 0% 5%;
-    --sidebar-foreground: 0 0% 95%;
+    --sidebar-background: 240 6% 8%;
+    --sidebar-foreground: 240 5% 64.9%;
     --sidebar-accent: 217 91% 60%;
-    --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 0 0% 15%;
+    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
+    --sidebar-border: 240 3.7% 15.9%;
     
     /* Primary - bright and vivid */
-    --primary: 217 91% 65%;
-    --primary-hover: 217 91% 70%;
-    --primary-foreground: 0 0% 0%;
+    --primary: 217 91% 60%;
+    --primary-hover: 217 91% 65%;
+    --primary-foreground: 222.2 47.4% 11.2%;
     
     /* Secondary with good contrast */
-    --secondary: 0 0% 12%;
-    --secondary-hover: 0 0% 15%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 240 4.9% 11.9%;
+    --secondary-hover: 240 4.9% 13.7%;
+    --secondary-foreground: 0 0% 98%;
     
     /* Muted elements */
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 240 4.9% 13.7%;
+    --muted-foreground: 240 5% 64.9%;
     
     /* Accent - vibrant purple */
     --accent: 262 83% 65%;
     --accent-subtle: 262 83% 15%;
-    --accent-foreground: 0 0% 0%;
+    --accent-foreground: 222.2 47.4% 11.2%;
     
     /* Semantic colors - bright for dark backgrounds */
     --success: 158 64% 52%;
-    --success-foreground: 0 0% 0%;
+    --success-foreground: 0 0% 98%;
     --warning: 43 96% 56%;
-    --warning-foreground: 0 0% 0%;
+    --warning-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84% 65%;
-    --destructive-foreground: 0 0% 0%;
+    --destructive-foreground: 0 0% 98%;
     
     /* Borders and inputs */
-    --border: 0 0% 15%;
-    --border-subtle: 0 0% 10%;
-    --input: 0 0% 15%;
+    --border: 240 3.7% 15.9%;
+    --border-subtle: 240 5.9% 10%;
+    --input: 240 3.7% 15.9%;
     --input-focus: 217 91% 65%;
     --ring: 217 91% 65%;
     
@@ -144,6 +184,58 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+  }
+  
+  /* Override theme colors in dark mode */
+  .dark {
+    --color-background: hsl(0 0% 3.9%);
+    --color-foreground: hsl(0 0% 98%);
+    
+    --color-card: hsl(0 0% 7%);
+    --color-card-foreground: hsl(0 0% 98%);
+    
+    --color-primary: hsl(217 91% 60%);
+    --color-primary-foreground: hsl(0 0% 9%);
+    
+    --color-muted: hsl(0 0% 8%);
+    --color-muted-foreground: hsl(0 0% 64%);
+    
+    --color-border: hsl(0 0% 14%);
+    --color-input: hsl(0 0% 14%);
+    --color-ring: hsl(217 91% 60%);
+    
+    --color-secondary: hsl(0 0% 9%);
+    --color-secondary-foreground: hsl(0 0% 98%);
+    
+    --color-destructive: hsl(0 72% 51%);
+    --color-destructive-foreground: hsl(0 0% 98%);
+    
+    --color-accent: hsl(262 83% 58%);
+    --color-accent-foreground: hsl(0 0% 98%);
+    
+    --color-success: hsl(158 64% 52%);
+    --color-success-foreground: hsl(0 0% 98%);
+    
+    --color-warning: hsl(43 96% 56%);
+    --color-warning-foreground: hsl(0 0% 0%);
+    
+    /* Surface elevation levels for dark mode */
+    --color-surface: hsl(0 0% 7%);
+    --color-surface-raised: hsl(0 0% 9%);
+    --color-surface-overlay: hsl(0 0% 11%);
+    
+    /* Align sidebar colors */
+    --sidebar-background: 0 0% 5%;
+    --sidebar-border: 0 0% 14%;
+  }
+  
+  /* Force card colors to work */
+  .bg-card {
+    background-color: var(--color-card);
+  }
+  
+  .text-card-foreground {
+    color: var(--color-card-foreground);
   }
 }
 

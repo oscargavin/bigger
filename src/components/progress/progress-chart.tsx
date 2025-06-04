@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import { Card } from '@/components/ui/card';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { useMemo } from "react";
+import { Card } from "@/components/ui/card";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
 interface ProgressChartProps {
   snapshots: Array<{
@@ -22,12 +22,12 @@ export function ProgressChart({ snapshots, baseline }: ProgressChartProps) {
     return snapshots
       .slice()
       .reverse()
-      .map(snapshot => ({
-        date: new Date(snapshot.date).toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
+      .map((snapshot) => ({
+        date: new Date(snapshot.date).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
         }),
-        weight: parseFloat(snapshot.weight || '0'),
+        weight: parseFloat(snapshot.weight || "0"),
         changePercent: snapshot.weightChangePercentage,
       }));
   }, [snapshots]);
@@ -37,14 +37,14 @@ export function ProgressChart({ snapshots, baseline }: ProgressChartProps) {
   const isPositive = trend > 0;
 
   // Calculate min and max for chart scaling
-  const weights = chartData.map(d => d.weight).filter(w => w > 0);
+  const weights = chartData.map((d) => d.weight).filter((w) => w > 0);
   const minWeight = Math.min(...weights, baseline.weight);
   const maxWeight = Math.max(...weights, baseline.weight);
   const range = maxWeight - minWeight || 1;
   const padding = range * 0.1;
 
   return (
-    <Card className="card-glass p-6">
+    <Card className="p-6">
       <div className="flex items-start justify-between mb-6">
         <div>
           <h3 className="text-lg font-semibold">Weight Progress</h3>
@@ -52,12 +52,20 @@ export function ProgressChart({ snapshots, baseline }: ProgressChartProps) {
             Relative to baseline: {baseline.weight}kg
           </p>
         </div>
-        
+
         {latestSnapshot && (
-          <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${
-            isPositive ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-red-500/10 text-red-600 dark:text-red-400'
-          }`}>
-            {isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+          <div
+            className={`flex items-center gap-2 px-3 py-1 rounded-full ${
+              isPositive
+                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                : "bg-red-500/10 text-red-600 dark:text-red-400"
+            }`}
+          >
+            {isPositive ? (
+              <TrendingUp className="w-4 h-4" />
+            ) : (
+              <TrendingDown className="w-4 h-4" />
+            )}
             <span className="font-medium">{Math.abs(trend).toFixed(1)}%</span>
           </div>
         )}
@@ -75,10 +83,14 @@ export function ProgressChart({ snapshots, baseline }: ProgressChartProps) {
           {/* Chart area */}
           <div className="ml-12 h-full relative">
             {/* Baseline reference line */}
-            <div 
+            <div
               className="absolute left-0 right-0 border-t-2 border-dashed border-muted-foreground/30"
               style={{
-                top: `${((maxWeight + padding - baseline.weight) / (range + 2 * padding)) * 100}%`
+                top: `${
+                  ((maxWeight + padding - baseline.weight) /
+                    (range + 2 * padding)) *
+                  100
+                }%`,
               }}
             >
               <span className="absolute -top-2.5 left-2 text-xs text-muted-foreground bg-background px-1">
@@ -87,24 +99,34 @@ export function ProgressChart({ snapshots, baseline }: ProgressChartProps) {
             </div>
 
             {/* Data points and line */}
-            <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+            <svg
+              className="absolute inset-0 w-full h-full"
+              preserveAspectRatio="none"
+            >
               {/* Line connecting points */}
               <polyline
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
                 className="text-primary"
-                points={chartData.map((d, i) => {
-                  const x = (i / (chartData.length - 1 || 1)) * 100;
-                  const y = ((maxWeight + padding - d.weight) / (range + 2 * padding)) * 100;
-                  return `${x},${y}`;
-                }).join(' ')}
+                points={chartData
+                  .map((d, i) => {
+                    const x = (i / (chartData.length - 1 || 1)) * 100;
+                    const y =
+                      ((maxWeight + padding - d.weight) /
+                        (range + 2 * padding)) *
+                      100;
+                    return `${x},${y}`;
+                  })
+                  .join(" ")}
               />
-              
+
               {/* Data points */}
               {chartData.map((d, i) => {
                 const x = (i / (chartData.length - 1 || 1)) * 100;
-                const y = ((maxWeight + padding - d.weight) / (range + 2 * padding)) * 100;
+                const y =
+                  ((maxWeight + padding - d.weight) / (range + 2 * padding)) *
+                  100;
                 return (
                   <circle
                     key={i}
@@ -138,22 +160,32 @@ export function ProgressChart({ snapshots, baseline }: ProgressChartProps) {
         <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t">
           <div className="text-center">
             <p className="text-sm text-muted-foreground">Current</p>
-            <p className="text-xl font-semibold">{parseFloat(latestSnapshot.weight || '0').toFixed(1)}kg</p>
+            <p className="text-xl font-semibold">
+              {parseFloat(latestSnapshot.weight || "0").toFixed(1)}kg
+            </p>
           </div>
           <div className="text-center">
             <p className="text-sm text-muted-foreground">Change</p>
-            <p className={`text-xl font-semibold ${
-              latestSnapshot.weightChangeAbsolute > 0 ? 'text-emerald-600' : 'text-red-600'
-            }`}>
-              {latestSnapshot.weightChangeAbsolute > 0 ? '+' : ''}{latestSnapshot.weightChangeAbsolute.toFixed(1)}kg
+            <p
+              className={`text-xl font-semibold ${
+                latestSnapshot.weightChangeAbsolute > 0
+                  ? "text-emerald-600"
+                  : "text-red-600"
+              }`}
+            >
+              {latestSnapshot.weightChangeAbsolute > 0 ? "+" : ""}
+              {latestSnapshot.weightChangeAbsolute.toFixed(1)}kg
             </p>
           </div>
           <div className="text-center">
             <p className="text-sm text-muted-foreground">Progress</p>
-            <p className={`text-xl font-semibold ${
-              trend > 0 ? 'text-emerald-600' : 'text-red-600'
-            }`}>
-              {trend > 0 ? '+' : ''}{trend.toFixed(1)}%
+            <p
+              className={`text-xl font-semibold ${
+                trend > 0 ? "text-emerald-600" : "text-red-600"
+              }`}
+            >
+              {trend > 0 ? "+" : ""}
+              {trend.toFixed(1)}%
             </p>
           </div>
         </div>

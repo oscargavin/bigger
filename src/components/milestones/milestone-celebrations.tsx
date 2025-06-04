@@ -59,7 +59,7 @@ export function MilestoneCelebrations() {
   useEffect(() => {
     checkAnniversaries.mutate();
     checkWorkoutMilestones.mutate();
-  }, [checkAnniversaries, checkWorkoutMilestones]);
+  }, []); // Empty dependency array - only run once on mount
 
   // Auto-show celebration for uncelebrated milestones
   useEffect(() => {

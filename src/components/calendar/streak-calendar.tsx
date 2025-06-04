@@ -149,14 +149,14 @@ export function StreakCalendar({ workoutDates, currentStreak, longestStreak }: S
                 "relative aspect-square p-1 text-center rounded-md transition-colors",
                 !day.isCurrentMonth && "text-muted-foreground/50",
                 day.isToday && "ring-2 ring-primary",
-                day.hasWorkout && day.isCurrentMonth && "bg-amber-500/10",
+                day.hasWorkout && day.isCurrentMonth && "bg-amber-500/10 dark:bg-amber-400/10",
                 day.isFuture && "opacity-50"
               )}
             >
               <span className="text-sm">{day.date.getDate()}</span>
               {day.hasWorkout && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <Flame className="h-4 w-4 text-amber-500" />
+                  <Flame className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                 </div>
               )}
             </div>
@@ -168,14 +168,14 @@ export function StreakCalendar({ workoutDates, currentStreak, longestStreak }: S
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-lg border p-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
-            <Flame className="h-5 w-5 text-amber-500" />
+            <Flame className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             <span className="text-2xl font-bold">{currentStreak}</span>
           </div>
           <p className="text-sm text-muted-foreground">Current Streak</p>
         </div>
         <div className="rounded-lg border p-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
-            <Flame className="h-5 w-5 text-amber-600" />
+            <Flame className="h-5 w-5 text-amber-700 dark:text-amber-400" />
             <span className="text-2xl font-bold">{longestStreak}</span>
           </div>
           <p className="text-sm text-muted-foreground">Best Streak</p>

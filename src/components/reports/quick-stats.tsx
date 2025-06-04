@@ -40,10 +40,10 @@ export function QuickStats() {
               className={cn(
                 "h-full transition-all duration-500",
                 weekProgress >= 100
-                  ? "bg-emerald-500"
+                  ? "bg-emerald-600 dark:bg-emerald-500"
                   : weekProgress >= 60
                   ? "bg-primary"
-                  : "bg-amber-500"
+                  : "bg-amber-600 dark:bg-amber-500"
               )}
               style={{ width: `${Math.min(100, weekProgress)}%` }}
             />
@@ -63,7 +63,7 @@ export function QuickStats() {
           
           <div className="rounded-lg bg-background-subtle dark:bg-surface-base p-3">
             <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+              <Clock className="h-4 w-4 text-violet-600 dark:text-violet-400" />
               <p className="text-sm font-medium">This Month</p>
             </div>
             <p className="text-2xl font-bold mt-1">{stats.month.workouts}</p>
