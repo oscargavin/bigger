@@ -29,7 +29,6 @@ export function ShameWidget({ className, showToast = true }: ShameWidgetProps) {
       toast({
         title: "AI Shame Engine Alert",
         description: shameData.message,
-        duration: 10000,
       })
     }
   }, [shameData, showToast, toast])

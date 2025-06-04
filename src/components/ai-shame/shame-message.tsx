@@ -100,7 +100,7 @@ export function ShameMessage({ className, autoRefresh = false, refreshInterval =
           <div className={cn(
             'p-3 rounded-full bg-white dark:bg-gray-900 shadow-lg',
             'ring-2 ring-offset-2 ring-offset-white dark:ring-offset-gray-950',
-            style.borderColor.replace('border-', 'ring-')
+            style.borderColor?.replace('border-', 'ring-')
           )}>
             <Icon className={cn('w-6 h-6', style.iconColor)} />
           </div>

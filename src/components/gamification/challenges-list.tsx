@@ -76,7 +76,7 @@ export function ChallengesList({ className }: ChallengesListProps) {
           key={challenge.id} 
           challenge={challenge}
           onJoin={() => joinChallenge.mutate({ challengeId: challenge.id })}
-          isJoining={joinChallenge.isLoading}
+          isJoining={joinChallenge.isPending}
         />
       ))}
     </div>

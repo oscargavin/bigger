@@ -4,10 +4,12 @@ import { createClient } from '@supabase/supabase-js'
 // For Vercel, you can use Vercel Cron Jobs: https://vercel.com/docs/cron-jobs
 // Example cron expression: 0 * * * * (runs every hour)
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // Service role key needed for admin operations
-)
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY! // Service role key needed for admin operations
+  )
+}
 
 interface UserWithReminder {
   id: string
@@ -34,6 +36,7 @@ export async function sendDailyReminders() {
     const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase()
 
     // Get all users with reminders enabled for the current hour
+    const supabase = getSupabaseClient()
     const { data: users, error } = await supabase
       .from('users')
       .select(`
@@ -107,6 +110,7 @@ async function sendReminderToUser(user: UserWithReminder) {
     const willBreakStreak = currentStreak > 0 && lastWorkoutDate !== today
 
     // Create notification record
+    const supabase = getSupabaseClient()
     const { error: notificationError } = await supabase
       .from('notifications')
       .insert({

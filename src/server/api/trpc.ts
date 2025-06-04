@@ -10,6 +10,7 @@ import { db } from '@/db';
  */
 type AppRouterContext = {
   supabase: SupabaseClient<any, any, any>;
+  supabaseAdmin: SupabaseClient<any, any, any>;
   db: typeof db;
   session: any;
   user: any;
@@ -45,6 +46,12 @@ export const createTRPCContext = async (
     }
   );
 
+  // Create service role client for admin operations
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
   // Get the user first to validate the JWT
   const {
     data: { user },
@@ -53,6 +60,7 @@ export const createTRPCContext = async (
 
   return {
     supabase,
+    supabaseAdmin,
     db,
     session: user ? { user } : null, // Create a minimal session object if user exists
     user,

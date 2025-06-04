@@ -45,7 +45,7 @@ export const badgesRouter = createTRPCRouter({
     // Get all badges and user's earned badges
     const [allBadgesResult, userBadgesResult, userStatsResult] = await Promise.all([
       ctx.supabase.from('badge_definitions').select('*'),
-      ctx.supabase.from('user_badges').select('badge_id').eq('user_id', userId),
+      ctx.supabase.from('user_badges').select('badge_id, earned_at').eq('user_id', userId),
       getUserStats(ctx, userId),
     ])
 
@@ -155,12 +155,10 @@ export const badgesRouter = createTRPCRouter({
       .from('user_badges')
       .select(`
         user_id,
-        user:users(id, username, full_name),
-        count
+        user:users(id, username, full_name)
       `)
-      .select('user_id', { count: 'exact' })
-      .order('count', { ascending: false })
-      .limit(10)
+      .order('user_id')
+      .limit(100)
 
     if (error) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })
 

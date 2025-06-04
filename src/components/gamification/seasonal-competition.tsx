@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -133,9 +134,11 @@ export function SeasonalCompetition({ className }: SeasonalCompetitionProps) {
                 </div>
                 <div className="text-sm">
                   <p className="font-semibold">
-                    {competition.userParticipation.pointsEarned} points
+                    {competition.userParticipation?.pointsEarned || 0} points
                   </p>
-                  {competition.userParticipation.comebackMultiplier > 1 && (
+                  {competition.userParticipation && 
+                   typeof competition.userParticipation.comebackMultiplier === 'number' && 
+                   competition.userParticipation.comebackMultiplier > 1 && (
                     <Badge variant="secondary" className="text-xs">
                       {competition.userParticipation.comebackMultiplier}x comeback bonus
                     </Badge>
@@ -160,7 +163,7 @@ export function SeasonalCompetition({ className }: SeasonalCompetitionProps) {
             </div>
             <Button 
               onClick={() => joinCompetition.mutate({ competitionId: competition.id })}
-              disabled={joinCompetition.isLoading}
+              disabled={joinCompetition.isPending}
               className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
             >
               Join Now
@@ -204,12 +207,13 @@ export function SeasonalCompetition({ className }: SeasonalCompetitionProps) {
       <div className="p-6 border-t bg-muted/20">
         <h4 className="text-sm font-semibold mb-2">How to Earn Points</h4>
         <div className="grid grid-cols-2 gap-2 text-xs">
-          {Object.entries(competition.scoringRules).slice(0, 4).map(([key, value]) => (
+          {competition.scoringRules && typeof competition.scoringRules === 'object' ? 
+           Object.entries(competition.scoringRules).slice(0, 4).map(([key, value]) => (
             <div key={key} className="flex items-center gap-1">
               <div className="w-2 h-2 rounded-full" style={{ backgroundColor: competition.color }} />
               <span className="capitalize">{key.replace(/_/g, ' ')}: {JSON.stringify(value)}</span>
             </div>
-          ))}
+          )) : null}
         </div>
       </div>
     </Card>
@@ -248,9 +252,9 @@ function LeaderboardEntry({ entry, rank, isCurrentUser, themeColor }: Leaderboar
         <div className="flex items-center justify-center w-8 h-8">
           {getRankIcon() || <span className="font-semibold text-muted-foreground">#{rank}</span>}
         </div>
-        <div className="h-8 w-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold">
+        <div className="h-8 w-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold relative">
           {entry.avatarUrl ? (
-            <img src={entry.avatarUrl} alt={entry.fullName} className="w-full h-full object-cover" />
+            <Image src={entry.avatarUrl} alt={entry.fullName} className="w-full h-full object-cover" fill sizes="32px" />
           ) : (
             entry.fullName[0]
           )}

@@ -213,7 +213,7 @@ export class PointsService {
             .update(exerciseLibrary)
             .set({
               personalRecord: bestSet,
-              lastPerformed: new Date(),
+              lastPerformed: new Date().toISOString().split('T')[0],
               updatedAt: new Date(),
             })
             .where(eq(exerciseLibrary.id, existingPR.id));
@@ -223,7 +223,7 @@ export class PointsService {
             exerciseName: exercise.name,
             category: exercise.category || 'other',
             personalRecord: bestSet,
-            lastPerformed: new Date(),
+            lastPerformed: new Date().toISOString().split('T')[0],
           });
         }
       }

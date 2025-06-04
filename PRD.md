@@ -19,6 +19,7 @@ _Get the basic habit loop working_
 **P1 - Authentication & Pairing**
 
 - [x] Implement Supabase auth (email/password)
+- [x] Fix user signup profile creation (use service role for RLS bypass)
 - [x] Create partnership invitation system (unique codes)
 - [x] Build user profile setup (name, starting weight/measurements)
 - [x] Partnership dashboard showing both users

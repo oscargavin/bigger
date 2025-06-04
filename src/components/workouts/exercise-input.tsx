@@ -45,7 +45,7 @@ export function ExerciseInput({ workoutId }: { workoutId?: string }) {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentExercise, setCurrentExercise] = useState('');
   const [customExercise, setCustomExercise] = useState('');
-  const [sets, setSets] = useState([{ reps: '', weight: '', unit: 'kg' as const }]);
+  const [sets, setSets] = useState<Array<{ reps: string; weight: string; unit: 'kg' | 'lbs' }>>([{ reps: '', weight: '', unit: 'kg' }]);
 
   const updateExerciseRecord = api.progress.updateExerciseRecord.useMutation({
     onSuccess: () => {

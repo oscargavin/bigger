@@ -27,9 +27,12 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
     )
   }
   
-  const currentLevelPoints = stats.level === 1 ? 0 : getLevelThreshold(stats.level - 1)
-  const nextLevelPoints = getLevelThreshold(stats.level)
-  const progressInLevel = stats.totalPoints - currentLevelPoints
+  const level = stats.level || 1
+  const totalPoints = stats.totalPoints || 0
+  const consistencyMultiplier = typeof stats.consistencyMultiplier === 'number' ? stats.consistencyMultiplier : 1
+  const currentLevelPoints = level === 1 ? 0 : getLevelThreshold(level - 1)
+  const nextLevelPoints = getLevelThreshold(level)
+  const progressInLevel = totalPoints - currentLevelPoints
   const pointsNeededForLevel = nextLevelPoints - currentLevelPoints
   const progressPercentage = (progressInLevel / pointsNeededForLevel) * 100
   
@@ -41,8 +44,8 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
             <Zap className="h-4 w-4 text-white" />
           </div>
           <div>
-            <p className="text-sm font-medium">{stats.totalPoints.toLocaleString()} pts</p>
-            <p className="text-xs text-muted-foreground">Level {stats.level}</p>
+            <p className="text-sm font-medium">{totalPoints.toLocaleString()} pts</p>
+            <p className="text-xs text-muted-foreground">Level {level}</p>
           </div>
         </div>
         <Progress value={progressPercentage} className="w-24 h-2" />
@@ -73,13 +76,13 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
               </div>
               <div>
                 <p className="text-2xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">
-                  {stats.totalPoints.toLocaleString()}
+                  {totalPoints.toLocaleString()}
                 </p>
                 <p className="text-sm text-muted-foreground">Total Points</p>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-3xl font-bold">Level {stats.level}</p>
+              <p className="text-3xl font-bold">Level {level}</p>
               <p className="text-sm text-muted-foreground">
                 {pointsNeededForLevel - progressInLevel} pts to next
               </p>
@@ -106,7 +109,7 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
               <p className="text-sm font-medium">This Week</p>
             </div>
             <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
-              {stats.weeklyPoints.toLocaleString()}
+              {(stats.weeklyPoints || 0).toLocaleString()}
             </p>
           </div>
           
@@ -118,20 +121,20 @@ export function PointsDisplay({ className, variant = 'full' }: PointsDisplayProp
               <p className="text-sm font-medium">This Month</p>
             </div>
             <p className="text-xl font-bold text-purple-600 dark:text-purple-400">
-              {stats.monthlyPoints.toLocaleString()}
+              {(stats.monthlyPoints || 0).toLocaleString()}
             </p>
           </div>
         </div>
         
         {/* Multiplier */}
-        {stats.consistencyMultiplier > 1 && (
+        {consistencyMultiplier > 1 && (
           <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900/20 dark:to-red-900/20">
             <div className="flex items-center gap-2">
               <Flame className="h-5 w-5 text-orange-600 dark:text-orange-400" />
               <span className="text-sm font-medium">Consistency Bonus Active</span>
             </div>
             <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
-              {stats.consistencyMultiplier}x Points
+              {consistencyMultiplier}x Points
             </Badge>
           </div>
         )}

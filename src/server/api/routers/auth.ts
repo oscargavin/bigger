@@ -42,8 +42,8 @@ export const authRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // Check if username is already taken
-      const { data: existingUser } = await ctx.supabase
+      // Check if username is already taken (use admin client to bypass RLS)
+      const { data: existingUser } = await ctx.supabaseAdmin
         .from('users')
         .select('id')
         .eq('username', input.username)
@@ -69,8 +69,8 @@ export const authRouter = createTRPCRouter({
       }
 
       if (data.user) {
-        // Create user profile in public.users table
-        const { error: profileError } = await ctx.supabase
+        // Create user profile in public.users table using admin client to bypass RLS
+        const { error: profileError } = await ctx.supabaseAdmin
           .from('users')
           .insert({
             id: data.user.id,
@@ -87,13 +87,25 @@ export const authRouter = createTRPCRouter({
           });
         }
 
-        // Create initial streak record
-        await ctx.supabase
+        // Create initial streak record using admin client
+        await ctx.supabaseAdmin
           .from('streaks')
           .insert({
             user_id: data.user.id,
             current_streak: 0,
             longest_streak: 0,
+          });
+
+        // Initialize user stats
+        await ctx.supabaseAdmin
+          .from('user_stats')
+          .insert({
+            user_id: data.user.id,
+            total_points: 0,
+            weekly_points: 0,
+            monthly_points: 0,
+            level: 1,
+            consistency_multiplier: 1.0
           });
       }
 

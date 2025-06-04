@@ -166,6 +166,7 @@ export function BadgeNotification({ badge }: BadgeNotificationProps) {
               badge={{
                 id: 'new',
                 ...badge,
+                category: 'achievement',
                 earned: true,
               }} 
               size="sm" 

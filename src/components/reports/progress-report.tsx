@@ -245,7 +245,7 @@ export function ProgressReport({ period = 'week', offset = 0 }: ProgressReportPr
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {report.topExercises.map((exercise, i) => (
+                  {report.topExercises.map((exercise: any, i) => (
                     <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface-raised dark:bg-surface-base">
                       <div>
                         <p className="font-medium">{exercise.name}</p>

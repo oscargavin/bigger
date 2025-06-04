@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Card } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // Avatar component removed - using custom implementation
@@ -125,7 +126,7 @@ export function Leaderboard({ className }: LeaderboardProps) {
                     </div>
                     <div className="text-right">
                       <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                        {userStats[period === 'weekly' ? 'weeklyPoints' : period === 'monthly' ? 'monthlyPoints' : 'totalPoints'].toLocaleString()}
+                        {userStats?.[period === 'weekly' ? 'weeklyPoints' : period === 'monthly' ? 'monthlyPoints' : 'totalPoints']?.toLocaleString() || '0'}
                       </p>
                       <p className="text-xs text-muted-foreground">points</p>
                     </div>
@@ -191,7 +192,7 @@ function PodiumCard({ entry, rank, isCurrentUser }: PodiumCardProps) {
           rank === 3 && 'ring-orange-400'
         )}>
           {entry.avatarUrl ? (
-            <img src={entry.avatarUrl} alt={entry.fullName} className="w-full h-full object-cover" />
+            <Image src={entry.avatarUrl} alt={entry.fullName} className="w-full h-full object-cover" fill sizes="80px" />
           ) : (
             entry.fullName[0]
           )}
@@ -246,7 +247,7 @@ function LeaderboardRow({ entry, isCurrentUser }: LeaderboardRowProps) {
         </span>
         <div className="h-10 w-10 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold">
           {entry.avatarUrl ? (
-            <img src={entry.avatarUrl} alt={entry.fullName} className="w-full h-full object-cover" />
+            <Image src={entry.avatarUrl} alt={entry.fullName} className="w-full h-full object-cover" fill sizes="80px" />
           ) : (
             entry.fullName[0]
           )}

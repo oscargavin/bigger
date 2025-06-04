@@ -2,6 +2,7 @@ import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { type NextRequest } from 'next/server';
 import { appRouter } from '@/server/api/root';
 import { createClient } from '@/lib/supabase-server';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { db } from '@/db';
 
 /**
@@ -28,6 +29,12 @@ const createContext = async (req: NextRequest) => {
   // Create Supabase server client with proper cookie handling
   const supabase = await createClient();
 
+  // Create service role client for admin operations
+  const supabaseAdmin = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
   // Get the user first to validate the JWT
   const {
     data: { user },
@@ -36,6 +43,7 @@ const createContext = async (req: NextRequest) => {
 
   return {
     supabase,
+    supabaseAdmin,
     db,
     session: user ? { user } : null, // Create a minimal session object if user exists
     user,

@@ -151,7 +151,7 @@ export const reportsRouter = createTRPCRouter({
       }, {} as Record<string, any>)
 
       const topExercises = Object.values(exerciseStats)
-        .sort((a, b) => b.sessions - a.sessions)
+        .sort((a: any, b: any) => b.sessions - a.sessions)
         .slice(0, 5)
 
       // Generate insights

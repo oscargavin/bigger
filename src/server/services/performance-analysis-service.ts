@@ -249,7 +249,7 @@ function calculateTimeDistribution(workouts: WorkoutData[]) {
   }
 
   workouts.forEach(workout => {
-    const hour = new Date(workout.completedAt).getHours()
+    const hour = new Date(workout.completed_at).getHours()
     if (hour >= 5 && hour < 12) distribution.morning++
     else if (hour >= 12 && hour < 17) distribution.afternoon++
     else if (hour >= 17 && hour < 22) distribution.evening++
@@ -295,7 +295,7 @@ function analyzeMissedDaysPattern(workouts: WorkoutData[]): string[] {
   }
 
   workouts.forEach(workout => {
-    const dayName = new Date(workout.completedAt).toLocaleDateString('en-US', { weekday: 'long' })
+    const dayName = new Date(workout.completed_at).toLocaleDateString('en-US', { weekday: 'long' })
     dayCount[dayName]++
   })
 
@@ -327,7 +327,7 @@ function findRecentPRs(
           exerciseBests.set(exercise.name, {
             weight: maxWeight,
             reps: bestSet?.reps || 0,
-            date: new Date(workout.completedAt)
+            date: new Date(workout.completed_at)
           })
         }
       })
