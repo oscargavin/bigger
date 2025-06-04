@@ -24,7 +24,9 @@ import {
   Target,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "next-themes";
 
 const sidebarSections = [
   {
@@ -60,6 +62,8 @@ const standaloneItems = [
 export function AppSidebar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { theme, resolvedTheme } = useTheme();
   const { data: user } = api.auth.getUser.useQuery();
   const { data: pendingRequests } = api.pairings.getPendingRequests.useQuery();
   const signOut = api.auth.signOut.useMutation({
@@ -67,6 +71,13 @@ export function AppSidebar() {
       window.location.href = "/";
     },
   });
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
+  // Use resolved theme to handle system theme
+  const currentTheme = mounted ? (resolvedTheme || theme) : "light";
 
   const sidebarContent = (
     <>
@@ -82,7 +93,10 @@ export function AppSidebar() {
               className="rounded-lg"
             />
           </div>
-          <span className="text-xl font-semibold tracking-tight">Bigger</span>
+          <span className={cn(
+            "text-xl font-semibold tracking-tight",
+            currentTheme === "dark" ? "text-gray-100" : "text-gray-900"
+          )}>Bigger</span>
         </Link>
       </div>
 
@@ -91,7 +105,10 @@ export function AppSidebar() {
         <div className="space-y-8">
           {sidebarSections.map((section) => (
             <div key={section.label}>
-              <h3 className="px-3 mb-2 text-xs font-medium text-muted-foreground/70 uppercase tracking-wider">
+              <h3 className={cn(
+                "px-3 mb-2 text-xs font-medium uppercase tracking-wider",
+                currentTheme === "dark" ? "text-gray-400" : "text-gray-500"
+              )}>
                 {section.label}
               </h3>
               <div className="space-y-1">
@@ -105,8 +122,12 @@ export function AppSidebar() {
                       className={cn(
                         "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 relative",
                         pathname === item.href
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                          ? currentTheme === "dark" 
+                            ? "bg-blue-950/20 text-blue-400"
+                            : "bg-blue-50 text-blue-600"
+                          : currentTheme === "dark"
+                            ? "text-gray-300 hover:bg-gray-800 hover:text-gray-100"
+                            : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                       )}
                     >
                       {pathname === item.href && (
@@ -116,8 +137,10 @@ export function AppSidebar() {
                         className={cn(
                           "mr-3 h-4 w-4 transition-all duration-200",
                           pathname === item.href
-                            ? "text-primary"
-                            : "text-muted-foreground/70 group-hover:text-muted-foreground"
+                            ? currentTheme === "dark" ? "text-blue-400" : "text-blue-600"
+                            : currentTheme === "dark" 
+                              ? "text-gray-400 group-hover:text-gray-300"
+                              : "text-gray-500 group-hover:text-gray-700"
                         )}
                       />
                       <span className="flex-1">{item.label}</span>
@@ -146,8 +169,12 @@ export function AppSidebar() {
                     className={cn(
                       "group flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 relative",
                       pathname === item.href
-                        ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                        ? currentTheme === "dark" 
+                          ? "bg-blue-950/20 text-blue-400"
+                          : "bg-blue-50 text-blue-600"
+                        : currentTheme === "dark"
+                          ? "text-gray-300 hover:bg-gray-800 hover:text-gray-100"
+                          : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                     )}
                   >
                     {pathname === item.href && (
@@ -157,8 +184,10 @@ export function AppSidebar() {
                       className={cn(
                         "mr-3 h-4 w-4 transition-all duration-200",
                         pathname === item.href
-                          ? "text-primary"
-                          : "text-muted-foreground/70 group-hover:text-muted-foreground"
+                          ? currentTheme === "dark" ? "text-blue-400" : "text-blue-600"
+                          : currentTheme === "dark" 
+                            ? "text-gray-400 group-hover:text-gray-300"
+                            : "text-gray-500 group-hover:text-gray-700"
                       )}
                     />
                     <span>{item.label}</span>
@@ -171,19 +200,36 @@ export function AppSidebar() {
       </div>
 
       {/* User section */}
-      <div className="border-t border-border/50 p-4 bg-muted/5">
+      <div className={cn(
+        "border-t p-4",
+        currentTheme === "dark"
+          ? "border-zinc-800 bg-zinc-800"
+          : "border-gray-200 bg-gray-50"
+      )}>
         <div className="flex items-center gap-3 mb-3">
-          <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
-            <span className="text-sm font-medium">
+          <div className={cn(
+            "h-10 w-10 rounded-full flex items-center justify-center",
+            currentTheme === "dark" ? "bg-gray-700" : "bg-gray-200"
+          )}>
+            <span className={cn(
+              "text-sm font-medium",
+              currentTheme === "dark" ? "text-gray-200" : "text-gray-700"
+            )}>
               {user?.username?.charAt(0).toUpperCase() ||
                 user?.email?.charAt(0).toUpperCase()}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">
+            <p className={cn(
+              "text-sm font-medium truncate",
+              currentTheme === "dark" ? "text-gray-100" : "text-gray-900"
+            )}>
               {user?.username || user?.email}
             </p>
-            <p className="text-xs text-muted-foreground truncate">
+            <p className={cn(
+              "text-xs truncate",
+              currentTheme === "dark" ? "text-gray-400" : "text-gray-500"
+            )}>
               {user?.email}
             </p>
           </div>
@@ -200,7 +246,12 @@ export function AppSidebar() {
         
         <Button
           variant="ghost"
-          className="w-full justify-start text-muted-foreground hover:text-foreground h-10"
+          className={cn(
+            "w-full justify-start h-10",
+            currentTheme === "dark"
+              ? "text-gray-400 hover:text-gray-100 hover:bg-gray-800"
+              : "text-gray-600 hover:text-gray-900 hover:bg-gray-200"
+          )}
           onClick={() => signOut.mutate()}
         >
           <LogOut className="mr-2 h-4 w-4" />
@@ -213,37 +264,72 @@ export function AppSidebar() {
   return (
     <>
       {/* Mobile menu button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="md:hidden fixed top-4 left-4 z-50 h-10 w-10 bg-background/80 backdrop-blur-sm border border-border/50"
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
+        className="md:hidden fixed top-4 left-4 z-50"
       >
-        {isMobileMenuOpen ? (
-          <X className="h-5 w-5" />
-        ) : (
-          <Menu className="h-5 w-5" />
-        )}
-      </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-10 w-10 rounded-lg bg-background border border-border/50 shadow-sm hover:shadow-md transition-shadow duration-200"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          <motion.div
+            initial={false}
+            animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-5 w-5 text-muted-foreground" />
+            ) : (
+              <Menu className="h-5 w-5 text-muted-foreground" />
+            )}
+          </motion.div>
+        </Button>
+      </motion.div>
 
       {/* Mobile sidebar */}
-      <div
-        className={cn(
-          "fixed inset-0 z-40 md:hidden",
-          isMobileMenuOpen ? "block" : "hidden"
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="fixed inset-0 z-40 md:hidden bg-background/80 backdrop-blur-sm"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            
+            {/* Sidebar */}
+            <motion.nav
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className={cn(
+                "fixed left-0 top-0 bottom-0 w-72 flex flex-col z-50 md:hidden shadow-xl",
+                currentTheme === "dark" 
+                  ? "bg-zinc-900 border-r border-zinc-800" 
+                  : "bg-white border-r border-gray-200"
+              )}
+            >
+              {sidebarContent}
+            </motion.nav>
+          </>
         )}
-      >
-        <div
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-        <nav className="fixed left-0 top-0 bottom-0 w-72 bg-background border-r border-border flex flex-col">
-          {sidebarContent}
-        </nav>
-      </div>
+      </AnimatePresence>
 
       {/* Desktop sidebar */}
-      <nav className="hidden md:flex w-72 border-r border-border bg-muted/5 flex-col h-screen sticky top-0">
+      <nav className={cn(
+        "hidden md:flex w-72 flex-col h-screen sticky top-0",
+        currentTheme === "dark"
+          ? "bg-zinc-900 border-r border-zinc-800"
+          : "bg-white border-r border-gray-200"
+      )}>
         {sidebarContent}
       </nav>
     </>

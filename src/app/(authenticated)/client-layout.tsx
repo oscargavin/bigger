@@ -17,7 +17,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
       <div className="flex h-screen">
         <AppSidebar />
         <main className="flex-1 overflow-y-auto">
-          <div className="container mx-auto p-6 md:pl-12">
+          <div className="container mx-auto p-6 pt-20 md:pt-6 md:pl-12">
             {children}
           </div>
         </main>

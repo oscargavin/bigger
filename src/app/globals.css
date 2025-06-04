@@ -19,12 +19,12 @@
     --card-hover: 0 0% 98%;
     --card-foreground: 0 0% 5%;
     
-    /* Sidebar with strong contrast */
-    --sidebar-background: 0 0% 3%;
-    --sidebar-foreground: 0 0% 98%;
+    /* Sidebar with subtle separation */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 5%;
     --sidebar-accent: 217 91% 60%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 15%;
+    --sidebar-border: 0 0% 89%;
     
     /* Primary brand color - vibrant blue */
     --primary: 217 91% 60%;
@@ -89,11 +89,11 @@
     --card-foreground: 0 0% 95%;
     
     /* Sidebar with subtle separation */
-    --sidebar-background: 0 0% 0%;
+    --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 95%;
     --sidebar-accent: 217 91% 60%;
     --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 0 0% 12%;
+    --sidebar-border: 0 0% 15%;
     
     /* Primary - bright and vivid */
     --primary: 217 91% 65%;
