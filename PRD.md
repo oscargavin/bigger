@@ -8,24 +8,27 @@ _Get the basic habit loop working_
 
 **P1 - Project Setup**
 
-- [ ] Initialize Next.js 14 project with TypeScript
-- [ ] Set up Tailwind CSS configuration
-- [ ] Set up Drizzle ORM with Supabase connection
+- [x] Initialize Next.js 15.3.3 project with TypeScript
+- [x] Set up Tailwind CSS configuration
+- [x] Set up Drizzle ORM with Supabase connection
 - [ ] Deploy basic skeleton to Vercel
+- [x] Use Shadcn
+- [x] Use custom css variables for easy use (e.g. bg-card)
+- [x] Fix authentication security (use getUser() instead of getSession())
 
 **P1 - Authentication & Pairing**
 
-- [ ] Implement Supabase auth (email/password)
-- [ ] Create partnership invitation system (unique codes)
-- [ ] Build user profile setup (name, starting weight/measurements)
-- [ ] Partnership dashboard showing both users
+- [x] Implement Supabase auth (email/password)
+- [x] Create partnership invitation system (unique codes)
+- [x] Build user profile setup (name, starting weight/measurements)
+- [x] Partnership dashboard showing both users
 
 **P1 - Basic Workout Logging**
 
-- [ ] Simple workout entry form (date, exercises, reps, weight)
-- [ ] Photo upload for workout proof (Supabase storage)
-- [ ] Basic workout history list view
-- [ ] Delete/edit workout entries
+- [x] Simple workout entry form (date, exercises, reps, weight)
+- [x] Photo upload for workout proof (Supabase storage)
+- [x] Basic workout history list view
+- [x] Delete/edit workout entries
 
 ### 🎯 **PHASE 2: Competition & Streaks (Week 3-4)**
 
@@ -33,24 +36,24 @@ _Make it addictive through competition_
 
 **P2 - Streak System**
 
-- [ ] Daily workout streak tracking
-- [ ] Streak visualization (calendar view)
-- [ ] Streak break detection and reset
-- [ ] Best streak records
+- [x] Daily workout streak tracking
+- [x] Streak visualization (calendar view)
+- [x] Streak break detection and reset
+- [x] Best streak records
 
 **P2 - Head-to-Head Dashboard**
 
-- [ ] Side-by-side current streak comparison
-- [ ] Weekly workout count comparison
-- [ ] Simple leaderboard (who's ahead this week/month)
-- [ ] Real-time updates when partner logs workout
+- [x] Side-by-side current streak comparison
+- [x] Weekly workout count comparison
+- [x] Simple leaderboard (who's ahead this week/month)
+- [x] Real-time updates when partner logs workout
 
 **P2 - Basic Notifications**
 
-- [ ] Push notifications when partner works out
-- [ ] Daily reminder notifications
-- [ ] Streak milestone celebrations
-- [ ] Simple "your partner is ahead" alerts
+- [x] Push notifications when partner works out (toast notifications)
+- [x] Daily reminder notifications
+- [x] Streak milestone celebrations
+- [x] Simple "your partner is ahead" alerts
 
 ### 📊 **PHASE 3: Progress Tracking (Week 5-6)**
 
@@ -58,17 +61,17 @@ _Relative progress system for different body types_
 
 **P3 - Relative Progress System**
 
-- [ ] Percentage-based progress calculations (% improvement from baseline)
-- [ ] Weight progression charts (relative to starting weight)
-- [ ] Strength progression tracking (% increase in lifts)
-- [ ] Side-by-side progress comparison (both normalized)
+- [x] Percentage-based progress calculations (% improvement from baseline)
+- [x] Weight progression charts (relative to starting weight)
+- [x] Strength progression tracking (% increase in lifts) - ExerciseInput component integrated
+- [x] Side-by-side progress comparison (both normalized) - PhotoComparison component with comparison mode
 
 **P3 - Progress Visualization**
 
-- [ ] Progress photo comparison (before/current)
-- [ ] Interactive charts showing improvement curves
-- [ ] Achievement badges for milestones (10% stronger, etc.)
-- [ ] Progress summary reports
+- [x] Progress photo comparison (before/current)
+- [x] Interactive charts showing improvement curves
+- [x] Achievement badges for milestones (10% stronger, etc.)
+- [x] Progress summary reports
 
 ### 🤖 **PHASE 4: AI-Enhanced Features (Week 7-8)**
 
@@ -76,10 +79,10 @@ _Smart shame and motivation_
 
 **P4 - AI Shame Engine (Anthropic API)**
 
-- [ ] Dynamic trash talk generation based on performance gaps
-- [ ] Personalized motivational messages using workout history
-- [ ] AI-generated shame messages when streaks break
-- [ ] Context-aware encouragement/roasting
+- [x] Dynamic trash talk generation based on performance gaps
+- [x] Personalized motivational messages using workout history
+- [x] AI-generated shame messages when streaks break
+- [x] Context-aware encouragement/roasting
 
 **P4 - Smart Insights**
 
@@ -94,17 +97,17 @@ _Add the fun psychological hooks_
 
 **P5 - Advanced Gamification**
 
-- [ ] Point system based on consistency + progress
-- [ ] Challenge system (who can squat bodyweight first, etc.)
-- [ ] Seasonal competitions (monthly themes)
-- [ ] Comeback mechanics when one person is behind
+- [x] Point system based on consistency + progress
+- [x] Challenge system (who can squat bodyweight first, etc.)
+- [x] Seasonal competitions (monthly themes)
+- [x] Comeback mechanics when one person is behind
 
 **P5 - UI/UX Polish**
 
-- [ ] Animated celebrations for achievements
-- [ ] Better mobile responsive design
-- [ ] Dark mode implementation
-- [ ] Smooth page transitions and micro-interactions
+- [x] Animated celebrations for achievements - AchievementCelebration component with confetti
+- [x] Better mobile responsive design
+- [x] Dark mode implementation
+- [x] Smooth page transitions and micro-interactions
 
 ### 💰 **PHASE 6: Stakes & Punishments (Week 11-12)**
 
@@ -137,7 +140,7 @@ _Nice-to-haves that enhance the experience_
 
 **P7 - Social Features (Private)**
 
-- [ ] Private workout journal/notes
+- [x] Private workout journal/notes
 - [ ] Partner messaging system
 - [ ] Shared goal setting
 - [ ] Anniversary celebrations (gym partnership milestones)
